@@ -29,7 +29,7 @@
 
             // Создание слоев для точек и линий
             var pointLayer = L.layerGroup({ overlay: false });
-            var lineLayer = L.layerGroup().addTo(map);
+            var lineLayerGroup = L.layerGroup().addTo(map);
             var polygonLayer = L.layerGroup().addTo(map);
             var couplingLayer = L.layerGroup({ overlay: false });
             var bstationLayer = L.layerGroup({ overlay: false });
@@ -93,7 +93,7 @@
                     lineLayer.eachLayer(function(layer) {
                         layer.options.className = 'line-layer'
                     });
-                    lineLayer.addTo(map)
+                    lineLayer.addTo(lineLayerGroup)
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
@@ -299,6 +299,7 @@
                 "Муфты": couplingLayer,
                 "Базовые станции": bstationLayer,
                 "Покрытие": polygonLayer,
+                "Линии": lineLayerGroup,
             };
             L.control.layers(null, overlayMaps).addTo(map);
 
