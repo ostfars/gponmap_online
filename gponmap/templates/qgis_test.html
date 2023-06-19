@@ -36,10 +36,17 @@
             var osbLayer = L.layerGroup({ overlay: false });
             var oskmLayer = L.layerGroup({ overlay: false });
 
+            var baseUrl;
+
+            if (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1") {
+                baseUrl = "http://localhost:8000";
+            } else {
+                baseUrl = "http://62.113.103.96";
+            }
 
             // AJAX-запрос для получения данных точек
             $.ajax({
-                url: 'http://62.113.103.96/qgis_point',
+                url: baseUrl + '/qgis_point',
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
@@ -66,7 +73,7 @@
 
             // AJAX-запрос для получения данных линий
             $.ajax({
-                url: 'http://62.113.103.96/qgis_colorline',
+                url: baseUrl + '/qgis_colorline',
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
@@ -129,7 +136,7 @@
 
             // AJAX-запрос для получения данных муфт
             $.ajax({
-                url: 'http://62.113.103.96/qgis_coupling',
+                url: baseUrl + '/qgis_coupling',
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
@@ -164,7 +171,7 @@
 
             // AJAX-запрос для получения данных базовых станций
             $.ajax({
-                url: 'http://62.113.103.96/qgis_bstation',
+                url: baseUrl + '/qgis_bstation',
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
@@ -199,7 +206,7 @@
 
             // AJAX-запрос для получения данных ОСБ
             $.ajax({
-                url: 'http://62.113.103.96/qgis_osb',
+                url: baseUrl + '/qgis_osb',
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
@@ -234,7 +241,7 @@
 
             // AJAX-запрос для получения данных ОСКМ
             $.ajax({
-                url: 'http://62.113.103.96/qgis_oskm',
+                url: baseUrl + '/qgis_oskm',
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
@@ -270,7 +277,7 @@
 
             // AJAX-запрос для получения данных полигонов
             $.ajax({
-                url: 'http://62.113.103.96/qgis_polygon',
+                url: baseUrl + '/qgis_polygon',
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {

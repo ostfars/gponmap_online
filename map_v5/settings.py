@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.2/ref/settings/
 """
 import os
+import socket
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -25,9 +26,13 @@ SECRET_KEY = os.environ.get('DJANGO_SEKRET_KEY', 'django-insecure-8j060nx_9gc9f-
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = False
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
-ALLOWED_HOSTS = ['62.113.103.96']
+# hostname = socket.gethostname()
+# if hostname == 'localhost' or hostname == '127.0.0.1':
+
+
+ALLOWED_HOSTS = ['localhost', '62.113.103.96']
 
 
 # Application definition
