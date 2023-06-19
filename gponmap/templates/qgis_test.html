@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Карта GPON</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+     integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY="
+     crossorigin=""/>
+    <style>
+        #map {
+            height: 98vh;
+        }
+    </style>
+</head>
+<body>
+    <div id="map"></div>
+
+    <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo="
+     crossorigin=""></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function() {
+            var map = L.map('map').setView([44.95792, 34.11026], 9);
+
+            L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                attribution: 'Map data &copy; OpenStreetMap contributors',
+                maxZoom: 19,
+            }).addTo(map);
+
+            // Создание слоев для точек и линий
+            var pointLayer = L.layerGroup({ overlay: false });
+            var lineLayer = L.layerGroup().addTo(map);
+            var polygonLayer = L.layerGroup().addTo(map);
+            var couplingLayer = L.layerGroup({ overlay: false });
+            var bstationLayer = L.layerGroup({ overlay: false });
+            var osbLayer = L.layerGroup({ overlay: false });
+            var oskmLayer = L.layerGroup({ overlay: false });
+
+
+            // AJAX-запрос для получения данных точек
+            $.ajax({
+                url: 'http://62.113.103.96/qgis_point',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    L.geoJSON(data, {
+                        pointToLayer: function(feature, latlng) {
+                            return L.circleMarker(latlng, {
+                                radius: 4,
+                                fillColor: 'blue',
+                                color: 'blue',
+                                weight: 1,
+                                opacity: 1,
+                                fillOpacity: 0.4
+                            });
+                        },
+                        onEachFeature: function(feature, layer) {
+                            pointLayer.addLayer(layer);
+                        },
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                },
+            });
+
+            // AJAX-запрос для получения данных линий
+            $.ajax({
+                url: 'http://62.113.103.96/qgis_colorline',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    var lineLayer = L.geoJSON(data, {
+                        style: function(feature) {
+                            var capacity = feature.properties.capacity;
+                            return {
+                                color: getColorByCapacity(capacity),
+                                dashArray: getStyleByCapacity(capacity),
+                                weight: 4,
+                            };
+                        },
+                        onEachFeature: function(feature, layer) {
+                            layer.bindPopup(getPopupContent(feature.properties));
+                        },
+                    });
+                    lineLayer.eachLayer(function(layer) {
+                        layer.options.className = 'line-layer'
+                    });
+                    lineLayer.addTo(map)
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                },
+            });
+
+            function getColorByCapacity(capacity) {
+                if (capacity == 4) {
+                return '#0da606';
+                } else if (capacity == 8) {
+                return '#ff0400';
+                } else if (capacity == 16) {
+                return '#1f76b4';
+                } else if (capacity == 24) {
+                return '#f7801e';
+                } else if (capacity == 48) {
+                return '#2757cf';
+                } else if (capacity == 64) {
+                return '#ee06ee';
+                } else if (capacity == 641) {
+                return '#ee06ee';
+                } else {
+                return 'black';
+                }
+            }
+            
+            function getStyleByCapacity(capacity) {
+                if (capacity == 641) {
+                return '10, 10';
+                } else {
+                return '';
+                }
+            }
+            
+
+            function getPopupContent(properties) {
+                var popupContent = '<b>Ёмкость:</b> ' + properties.capacity;
+                return popupContent;
+            }
+
+            // AJAX-запрос для получения данных муфт
+            $.ajax({
+                url: 'http://62.113.103.96/qgis_coupling',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    L.geoJSON(data, {
+                        pointToLayer: function(feature, latlng) {
+                            return L.circleMarker(latlng, {
+                                radius: 6,
+                                fillColor: '#db1e2a',
+                                color: '#db1e2a',
+                                weight: 1,
+                                opacity: 1,
+                                fillOpacity: 0.9
+                            });
+                        },
+                        onEachFeature: function(feature, layer) {
+                            layer.bindPopup(getCouplingContent(feature.properties));
+                        }
+                    }).addTo(couplingLayer);
+                    couplingLayer.eachLayer(function(layer) {
+                        layer.options.className = 'coupling-layer';
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                },
+            });
+
+            function getCouplingContent(properties) {
+                var couplingContent = '<b>Муфта:</b> ' + properties.coupling;
+                return couplingContent;
+            }
+
+            // AJAX-запрос для получения данных базовых станций
+            $.ajax({
+                url: 'http://62.113.103.96/qgis_bstation',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    L.geoJSON(data, {
+                        pointToLayer: function(feature, latlng) {
+                            return L.circleMarker(latlng, {
+                                radius: 8,
+                                fillColor: 'yellow',
+                                color: 'yellow',
+                                weight: 1,
+                                opacity: 1,
+                                fillOpacity: 0.9
+                            });
+                        },
+                        onEachFeature: function(feature, layer) {
+                            layer.bindPopup(getBstationContent(feature.properties));
+                        }
+                    }).addTo(bstationLayer);
+                    bstationLayer.eachLayer(function(layer) {
+                        layer.options.className = 'bstation-layer';
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                },
+            });
+
+            function getBstationContent(properties) {
+                var bstationContent = '<b>БС:</b> ' + properties.name;
+                return bstationContent;
+            }
+
+            // AJAX-запрос для получения данных ОСБ
+            $.ajax({
+                url: 'http://62.113.103.96/qgis_osb',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    L.geoJSON(data, {
+                        pointToLayer: function(feature, latlng) {
+                            return L.circleMarker(latlng, {
+                                radius: 4,
+                                fillColor: 'red',
+                                color: 'red',
+                                weight: 1,
+                                opacity: 1,
+                                fillOpacity: 1
+                            });
+                        },
+                        onEachFeature: function(feature, layer) {
+                            layer.bindPopup(getOSBContent(feature.properties));
+                        }
+                    }).addTo(osbLayer);
+                    osbLayer.eachLayer(function(layer) {
+                        layer.options.className = 'osb-layer';
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                },
+            });
+
+            function getOSBContent(properties) {
+                var osbContent = properties.osb;
+                return osbContent;
+            }
+
+            // AJAX-запрос для получения данных ОСКМ
+            $.ajax({
+                url: 'http://62.113.103.96/qgis_oskm',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    L.geoJSON(data, {
+                        pointToLayer: function(feature, latlng) {
+                            return L.circleMarker(latlng, {
+                                radius: 8,
+                                fillColor: 'green',
+                                color: 'green',
+                                weight: 1,
+                                opacity: 1,
+                                fillOpacity: 1
+                            });
+                        },
+                        onEachFeature: function(feature, layer) {
+                            layer.bindPopup(getOSKMContent(feature.properties));
+                        }
+                    }).addTo(oskmLayer);
+                    oskmLayer.eachLayer(function(layer) {
+                        layer.options.className = 'oskm-layer';
+                    });
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                },
+            });
+
+            function getOSKMContent(properties) {
+                var oskmContent = properties.oskm;
+                return oskmContent;
+            }
+
+
+            // AJAX-запрос для получения данных полигонов
+            $.ajax({
+                url: 'http://62.113.103.96/qgis_polygon',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    L.geoJSON(data, {
+                        style: {
+                            color: 'green',
+                        },
+                    }).addTo(polygonLayer);
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                },
+            });
+            // Контроль переключения между слоями
+            var overlayMaps = {
+                "Все опоры": pointLayer,
+                "ОСБ": osbLayer,
+                "ОСKM": oskmLayer,
+                "Муфты": couplingLayer,
+                "Базовые станции": bstationLayer,
+                "Покрытие": polygonLayer,
+            };
+            L.control.layers(null, overlayMaps).addTo(map);
+
+        });
+    </script>
+</body>
+</html>

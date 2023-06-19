@@ -1,0 +1,5 @@
+django-filter
+djangorestframework
+djangorestframework-gis
+django
+psycopg2-binary
