@@ -22,11 +22,12 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 
 # SECURITY WARNING: keep the secret key used in production secret!
 # SECRET_KEY = 'django-insecure-8j060nx_9gc9f-q59)ep3ed7o%g7y96-k&iqolg!9($&w88+^r'
-SECRET_KEY = os.environ.get('DJANGO_SEKRET_KEY', 'django-insecure-8j060nx_9gc9f-q59)ep3ed7o%g7y96-k&iqolg!9($&w88+^r')
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'django-insecure-8j060nx_9gc9f-q59)ep3ed7o%g7y96-k&iqolg!9($&w88+^r')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 # DEBUG = True
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+# DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+DEBUG = os.environ.get('DJANGO_DEBUG', '') != 'False'
 
 # hostname = socket.gethostname()
 # if hostname == 'localhost' or hostname == '127.0.0.1':
