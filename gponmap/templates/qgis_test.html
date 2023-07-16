@@ -30,6 +30,7 @@
             // Создание слоев для точек и линий
             var pointLayer = L.layerGroup({ overlay: false });
             var lineLayerGroup = L.layerGroup().addTo(map);
+            var realLineLayerGroup = L.layerGroup({ overlay: false });
             var polygonLayer = L.layerGroup().addTo(map);
             var couplingLayer = L.layerGroup({ overlay: false });
             var bstationLayer = L.layerGroup({ overlay: false });
@@ -94,6 +95,35 @@
                         layer.options.className = 'line-layer'
                     });
                     lineLayer.addTo(lineLayerGroup)
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                },
+            });
+
+            // AJAX-запрос для получения данных фактических линий
+            $.ajax({
+                url: baseUrl + '/qgis_realline',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    var realLineLayer = L.geoJSON(data, {
+                        style: function(feature) {
+                            var capacity = feature.properties.capacity;
+                            return {
+                                color: getColorByCapacity(capacity),
+                                dashArray: getStyleByCapacity(capacity),
+                                weight: 4,
+                            };
+                        },
+                        onEachFeature: function(feature, layer) {
+                            layer.bindPopup(getPopupContent(feature.properties));
+                        },
+                    });
+                    realLineLayer.eachLayer(function(layer) {
+                        layer.options.className = 'line-layer'
+                    });
+                    realLineLayer.addTo(realLineLayerGroup)
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
@@ -299,7 +329,8 @@
                 "Муфты": couplingLayer,
                 "Базовые станции": bstationLayer,
                 "Покрытие": polygonLayer,
-                "Линии": lineLayerGroup,
+                "Линии проектные": lineLayerGroup,
+                "Линии фактические": realLineLayerGroup,
             };
             L.control.layers(null, overlayMaps).addTo(map);
 

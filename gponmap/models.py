@@ -54,8 +54,20 @@ class ColorLine(models.Model):
     class Meta:
         managed = False
         db_table = 'colorlines_all'
-        
-        
+
+
+class RealLine(models.Model):
+    geom = models.MultiLineStringField()
+    capacity = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.capacity
+
+    class Meta:
+        managed = False
+        db_table = 'real_lines_all'
+
+
 class QgisCoupling(models.Model):
     geom = models.PointField()
     coupling = models.CharField(max_length=100)

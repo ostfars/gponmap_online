@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from gponmap.views import QgisPointAPIView, QgisLineAPIView, QgisPolygonAPIView, ColorLineAPIView, QgisCouplingAPIView, QgisBStationAPIView, QgisOSBAPIView, QgisOSKMAPIView
+from gponmap.views import QgisPointAPIView, QgisLineAPIView, QgisPolygonAPIView, ColorLineAPIView, RealLineAPIView, QgisCouplingAPIView, QgisBStationAPIView, QgisOSBAPIView, QgisOSKMAPIView
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -26,6 +26,7 @@ urlpatterns = [
     path('qgis_line', QgisLineAPIView.as_view(), name='lines-api'),
     path('qgis_polygon', QgisPolygonAPIView.as_view(), name='polygons-api'),
     path('qgis_colorline', ColorLineAPIView.as_view(), name='colorlines-api'),
+    path('qgis_realline', RealLineAPIView.as_view(), name='reallines-api'),
     path('qgis_coupling', QgisCouplingAPIView.as_view(), name='couplings-api'),
     path('qgis_bstation', QgisBStationAPIView.as_view(), name='bstations-api'),
     path('qgis_osb', QgisOSBAPIView.as_view(), name='osb-api'),

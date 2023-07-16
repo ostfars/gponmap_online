@@ -1,5 +1,5 @@
 from rest_framework_gis import serializers
-from gponmap.models import Point, QgisPoint, QgisLine, QgisPolygon, ColorLine, QgisCoupling, QgisBStation, QgisOSB, QgisOSKM
+from gponmap.models import Point, QgisPoint, QgisLine, QgisPolygon, ColorLine, RealLine, QgisCoupling, QgisBStation, QgisOSB, QgisOSKM
 
 
 class PointSerializer(serializers.GeoFeatureModelSerializer):
@@ -41,6 +41,18 @@ class ColorLineSerializer(serializers.GeoFeatureModelSerializer):
             properties['capacity'] = instance.capacity
             return properties
             
+
+class RealLineSerializer(serializers.GeoFeatureModelSerializer):
+    class Meta:
+        model = ColorLine
+        geo_field = 'geom'
+        fields = ('capacity',)
+
+        def get_properties(self, instance, fields):
+            properties = super().get_properties(instance, fields)
+            properties['capacity'] = instance.capacity
+            return properties
+
 
 class QgisCouplingSerializer(serializers.GeoFeatureModelSerializer):
     class Meta:
