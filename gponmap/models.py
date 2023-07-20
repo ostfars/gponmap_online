@@ -38,6 +38,10 @@ class QgisLine(models.Model):
 
 class QgisPolygon(models.Model):
     geom = models.MultiPolygonField()
+    number = models.CharField(max_length=100)
+    count = models.CharField(max_length=100)
+    type = models.CharField(max_length=100)
+    color = models.CharField(max_length=100)
 
     class Meta:
         managed = False
