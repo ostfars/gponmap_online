@@ -38,14 +38,14 @@ class QgisLine(models.Model):
 
 class QgisPolygon(models.Model):
     geom = models.MultiPolygonField()
-    number = models.CharField(max_length=100)
-    count = models.CharField(max_length=100)
-    type = models.CharField(max_length=100)
-    color = models.CharField(max_length=100)
+    p_name = models.CharField(max_length=100)
+    p_number = models.CharField(max_length=100)
+    p_count = models.CharField(max_length=100)
+    p_type = models.CharField(max_length=100)
 
     class Meta:
         managed = False
-        db_table = 'polygons_all'
+        db_table = 'polygons_info_all'
         
         
 class ColorLine(models.Model):

@@ -145,6 +145,8 @@
                 return '#ee06ee';
                 } else if (capacity == 641) {
                 return '#ee06ee';
+                } else if (capacity == 96) {
+                return '#7d7d7c';
                 } else {
                 return 'black';
                 }
@@ -321,6 +323,17 @@
                     console.error(error);
                 },
             });
+
+            function getColorByPType(p_type) {
+                if (p_type == 32) {
+                return '#0da606';
+                } else if (capacity == 8) {
+                return '#ff0400';
+                } else {
+                return 'black';
+                }
+            }
+
             // Контроль переключения между слоями
             var overlayMaps = {
                 "Все опоры": pointLayer,
