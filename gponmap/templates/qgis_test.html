@@ -314,8 +314,15 @@
                 dataType: 'json',
                 success: function(data) {
                     L.geoJSON(data, {
-                        style: {
-                            color: 'green',
+                        style: function(feature) {
+                            var color = feature.properties.color;
+
+                            return {
+                                fillColor: color,
+                                color: color,
+                                weight: 1,
+                                fillOpacity: 0.6
+                            }
                         },
                     }).addTo(polygonLayer);
                 },
@@ -323,16 +330,6 @@
                     console.error(error);
                 },
             });
-
-            function getColorByPType(p_type) {
-                if (p_type == 32) {
-                return '#0da606';
-                } else if (capacity == 8) {
-                return '#ff0400';
-                } else {
-                return 'black';
-                }
-            }
 
             // Контроль переключения между слоями
             var overlayMaps = {
