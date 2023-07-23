@@ -42,6 +42,7 @@ class QgisPolygon(models.Model):
     p_number = models.CharField(max_length=100)
     p_count = models.CharField(max_length=100)
     p_type = models.CharField(max_length=100)
+    p_oskm = models.CharField(max_length=100)
     color = models.CharField(max_length=100)
 
     class Meta:
