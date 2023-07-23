@@ -324,12 +324,32 @@
                                 fillOpacity: 0.6
                             }
                         },
+                        onEachFeature: function(feature, layer) {
+                            layer.bindPopup(getPolygonContent(feature.properties));
+                        }
+
                     }).addTo(polygonLayer);
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
                 },
             });
+
+            function getPolygonContent(properties) {
+<!--                var polygonContent = '<b>Тип:</b> ' + properties.p_type + '<br><b>Количество:</b> '+ properties.p_count;-->
+
+                    var polygonContent = '';
+                    if (properties.p_type !== null) {
+                        polygonContent += '<b>Тип: </b>' + properties.p_type + '<br>';
+                    }
+                    if (properties.p_count !== null) {
+                        polygonContent += '<b>Количество: </b>' + properties.p_count + '<br>';
+                    }
+                    if (properties.p_oskm !== null) {
+                        polygonContent += '<b>ОСКМ</b>' + properties.p_oskm + '<br>';
+                    }
+                return polygonContent;
+            }
 
             // Контроль переключения между слоями
             var overlayMaps = {
