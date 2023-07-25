@@ -45,9 +45,36 @@
                 baseUrl = "http://62.113.103.96";
             }
 
-            // AJAX-запрос для получения данных точек
+<!--            // AJAX-запрос для получения данных точек-->
+<!--            $.ajax({-->
+<!--                url: baseUrl + '/qgis_point',-->
+<!--                type: 'GET',-->
+<!--                dataType: 'json',-->
+<!--                success: function(data) {-->
+<!--                    L.geoJSON(data, {-->
+<!--                        pointToLayer: function(feature, latlng) {-->
+<!--                            return L.circleMarker(latlng, {-->
+<!--                                radius: 4,-->
+<!--                                fillColor: 'blue',-->
+<!--                                color: 'blue',-->
+<!--                                weight: 1,-->
+<!--                                opacity: 1,-->
+<!--                                fillOpacity: 0.4-->
+<!--                            });-->
+<!--                        },-->
+<!--                        onEachFeature: function(feature, layer) {-->
+<!--                            pointLayer.addLayer(layer);-->
+<!--                        },-->
+<!--                    });-->
+<!--                },-->
+<!--                error: function(xhr, status, error) {-->
+<!--                    console.error(error);-->
+<!--                },-->
+<!--            });-->
+
+            // AJAX-запрос для получения данных точек с данными о линиях
             $.ajax({
-                url: baseUrl + '/qgis_point',
+                url: baseUrl + '/qgis_point_info',
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
@@ -63,14 +90,22 @@
                             });
                         },
                         onEachFeature: function(feature, layer) {
-                            pointLayer.addLayer(layer);
-                        },
+                            layer.bindPopup(getPointContent(feature.properties));
+                        }
+                    }).addTo(pointLayer);
+                    pointLayer.eachLayer(function(layer) {
+                        layer.options.className = 'point-layer';
                     });
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
                 },
             });
+
+            function getPointContent(properties) {
+                var pointContent = '<b>Линии:</b> ' + properties.line_info_array;
+                return pointContent;
+            }
 
             // AJAX-запрос для получения данных линий
             $.ajax({
@@ -336,7 +371,6 @@
             });
 
             function getPolygonContent(properties) {
-<!--                var polygonContent = '<b>Тип:</b> ' + properties.p_type + '<br><b>Количество:</b> '+ properties.p_count;-->
 
                     var polygonContent = '';
                     if (properties.p_type !== null) {

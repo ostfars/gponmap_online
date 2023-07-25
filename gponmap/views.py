@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from rest_framework.generics import ListAPIView
-from .models import QgisPoint, QgisLine, QgisPolygon, ColorLine, RealLine, QgisCoupling, QgisBStation, QgisOSB, QgisOSKM
-from .serializers import QgisPointSerializer, QgisLineSerializer, QgisPolygonSerializer, ColorLineSerializer, RealLineSerializer, QgisCouplingSerializer, QgisBStationSerializer, QgisOSBSerializer, QgisOSKMSerializer
+from django.http import JsonResponse
+from .models import QgisPoint, QgisPointsLineInfo, QgisLine, QgisPolygon, ColorLine, RealLine, QgisCoupling, QgisBStation, QgisOSB, QgisOSKM
+from .serializers import QgisPointSerializer, QgisPointsLineInfoSerializer, QgisLineSerializer, QgisPolygonSerializer, ColorLineSerializer, RealLineSerializer, QgisCouplingSerializer, QgisBStationSerializer, QgisOSBSerializer, QgisOSKMSerializer
 
 
 class GponmapView(TemplateView):
@@ -16,6 +17,11 @@ class QgisMapView(TemplateView):
 class QgisPointAPIView(ListAPIView):
     queryset = QgisPoint.objects.all()
     serializer_class = QgisPointSerializer
+
+
+class QgisPointsLineInfoAPIView(ListAPIView):
+    queryset = QgisPointsLineInfo.objects.all()
+    serializer_class = QgisPointsLineInfoSerializer
 
 
 class QgisLineAPIView(ListAPIView):

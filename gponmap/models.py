@@ -1,5 +1,7 @@
 from django.contrib.gis.db import models
 
+# from django.db import models
+
 
 class Point(models.Model):
     name = models.CharField(max_length=255)
@@ -21,6 +23,23 @@ class QgisPoints(models.Model):
 
 
 class QgisPoint(models.Model):
+    geom = models.PointField()
+
+    class Meta:
+        managed = False
+        db_table = 'points_all'
+
+
+class QgisPointsLineInfo(models.Model):
+    geom = models.PointField()
+    line_info_array = models.TextField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'points_line_info_all'
+
+
+class QgisPointInfo(models.Model):
     geom = models.PointField()
 
     class Meta:
