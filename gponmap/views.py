@@ -2,7 +2,12 @@ from django.shortcuts import render
 from django.views.generic.base import TemplateView
 from rest_framework.generics import ListAPIView
 from django.http import JsonResponse
-from .models import QgisPoint, QgisPointsLineInfo, QgisLine, QgisPolygon, ColorLine, RealLine, QgisCoupling, QgisBStation, QgisOSB, QgisOSKM
+
+from django.http import HttpResponse
+from django.contrib.gis.geos import MultiLineString
+from django.contrib.gis.db.models.functions import AsKML
+
+from .models import QgisPoint, QgisPointsLineInfo, QgisLine, QgisPolygon, ColorLine, RealLine, QgisCoupling, QgisBStation, QgisOSB, QgisOSKM, KMLLine
 from .serializers import QgisPointSerializer, QgisPointsLineInfoSerializer, QgisLineSerializer, QgisPolygonSerializer, ColorLineSerializer, RealLineSerializer, QgisCouplingSerializer, QgisBStationSerializer, QgisOSBSerializer, QgisOSKMSerializer
 
 
@@ -62,3 +67,26 @@ class QgisOSBAPIView(ListAPIView):
 class QgisOSKMAPIView(ListAPIView):
     queryset = QgisOSKM.objects.all()
     serializer_class = QgisOSKMSerializer
+
+
+def kml_lines(request):
+    # Извлекаем мультилинии из базы данных
+    multilines = KMLLine.objects.all()
+
+    # Преобразуем мультилинии в KML
+    kml = '<kml xmlns="http://www.opengis.net/kml/2.2">'
+    kml += '<Document>'
+    for multiline in multilines:
+        kml += '<Placemark>'
+        kml += '<name>Линия</name>'
+        kml += '<description>ВОК' + multiline.capacity + '</description>'
+        kml += AsKML(multiline.geom)
+        kml += '</Placemark>'
+    kml += '</Document>'
+    kml += '</kml>'
+
+    # Возвращаем KML-документ в HTTP-ответе
+    response = HttpResponse(content_type='application/vnd.google-earth.kml+xml')
+    response['Content-Disposition'] = 'attachment; filename="export.kml"'
+    response.write(kml)
+    return response

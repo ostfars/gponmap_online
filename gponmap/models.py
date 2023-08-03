@@ -96,6 +96,7 @@ class RealLine(models.Model):
 class QgisCoupling(models.Model):
     geom = models.PointField()
     coupling = models.CharField(max_length=100)
+    inform = models.CharField(max_length=1000)
 
     def __str__(self):
         return self.coupling
@@ -123,6 +124,7 @@ class QgisBStation(models.Model):
 class QgisOSB(models.Model):
     geom = models.PointField()
     osb = models.CharField(max_length=100)
+    inform = models.CharField(max_length=1000)
 
     def __str__(self):
         return self.osb
@@ -135,6 +137,7 @@ class QgisOSB(models.Model):
 class QgisOSKM(models.Model):
     geom = models.PointField()
     oskm = models.CharField(max_length=100)
+    inform = models.CharField(max_length=1000)
 
     def __str__(self):
         return self.oskm
@@ -142,4 +145,16 @@ class QgisOSKM(models.Model):
     class Meta:
         managed = False
         db_table = 'oskm_all'        
-        
+
+
+class KMLLine(models.Model):
+    geom = models.MultiLineStringField()
+    capacity = models.CharField(max_length=100)
+    color = models.CharField(max_length=100)
+
+    def __str__(self):
+        return self.capacity
+
+    class Meta:
+        managed = False
+        db_table = 'colorlines_all'

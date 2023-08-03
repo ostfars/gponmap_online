@@ -197,7 +197,7 @@
             
 
             function getPopupContent(properties) {
-                var popupContent = '<b>Ёмкость:</b> ' + properties.capacity;
+                var popupContent = '<b>ВОК ' + properties.capacity + '</b>';
                 return popupContent;
             }
 
@@ -232,7 +232,10 @@
             });
 
             function getCouplingContent(properties) {
-                var couplingContent = '<b>Муфта:</b> ' + properties.coupling;
+                var couplingContent = '<b>Муфта:</b> ' + properties.coupling + '<br>'
+                if (properties.inform !== null) {
+                    couplingContent += properties.inform;
+                }
                 return couplingContent;
             }
 
@@ -303,6 +306,9 @@
 
             function getOSBContent(properties) {
                 var osbContent = properties.osb;
+                if (properties.inform !== null) {
+                    osbContent += '<br>' + properties.inform;
+                }
                 return osbContent;
             }
 
@@ -338,6 +344,9 @@
 
             function getOSKMContent(properties) {
                 var oskmContent = properties.oskm;
+                if (properties.inform !== null) {
+                    oskmContent += '<br>' + properties.inform;
+                }
                 return oskmContent;
             }
 
