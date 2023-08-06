@@ -52,6 +52,60 @@
                     weight: 4,
                 },
             });
+            var capacity16Layer = L.geoJSON([], {
+                style: {
+                    color: '#1f76b4',
+<!--                    dashArray: getStyleByCapacity(8),-->
+                    weight: 4,
+                },
+            });
+            var capacity24Layer = L.geoJSON([], {
+                style: {
+                    color: '#f7801e',
+<!--                    dashArray: getStyleByCapacity(8),-->
+                    weight: 4,
+                },
+            });
+            var capacity48Layer = L.geoJSON([], {
+                style: {
+                    color: '#2757cf',
+<!--                    dashArray: getStyleByCapacity(8),-->
+                    weight: 4,
+                },
+            });
+            var capacity64Layer = L.geoJSON([], {
+                style: {
+                    color: '#ee06ee',
+<!--                    dashArray: getStyleByCapacity(8),-->
+                    weight: 4,
+                },
+            });
+            var capacity96Layer = L.geoJSON([], {
+                style: {
+                    color: '#7d7d7c',
+<!--                    dashArray: getStyleByCapacity(8),-->
+                    weight: 4,
+                },
+            });
+
+            var allLinesLayerGroup = L.layerGroup([
+                capacity4Layer,
+                capacity8Layer,
+                capacity16Layer,
+                capacity24Layer,
+                capacity48Layer,
+                capacity64Layer,
+                capacity96Layer,
+            ]);
+
+            var lineHeader = L.Control.extend({
+                onAdd: function(map) {
+                    var div = L.DomUtil.create('div', 'info legend');
+                    div.innerHTML = '<strong>Линии проектные:</strong>';
+                    return div;
+                }
+            });
+
 
             // Добавьте слои для других значений capacity по аналогии
 
@@ -70,9 +124,15 @@
                     } else if (capacity == 8) {
                         capacity8Layer.addData(feature);
                     } else if (capacity == 16) {
-                        // Добавьте другие условия для других значений capacity
-                    } else {
-                        // Добавьте обработку для других значений capacity по аналогии
+                        capacity16Layer.addData(feature);
+                    } else if (capacity == 24) {
+                        capacity24Layer.addData(feature);
+                    } else if (capacity == 48) {
+                        capacity48Layer.addData(feature);
+                    } else if (capacity == 64) {
+                        capacity64Layer.addData(feature);
+                    } else if (capacity == 96) {
+                        capacity96Layer.addData(feature);
                     }
                 });
 
@@ -83,13 +143,21 @@
 
         // Добавьте слои в контроль переключения
         var overlayMaps = {
-            // ... остальные слои
-            "Линии фактические (4)": capacity4Layer,
-            "Линии фактические (8)": capacity8Layer,
-            // ... добавьте другие слои по аналогии
+
+            "ВОК 96": capacity96Layer,
+            "ВОК 64": capacity64Layer,
+            "ВОК 48": capacity48Layer,
+            "ВОК 24": capacity24Layer,
+            "ВОК 16": capacity16Layer,
+            "ВОК 8": capacity8Layer,
+            "ВОК 4": capacity4Layer,
+
+            "Все линии": allLinesLayerGroup,
         };
         L.control.layers(null, overlayMaps).addTo(map);
     },
+
+
     error: function(xhr, status, error) {
         console.error(error);
     },
