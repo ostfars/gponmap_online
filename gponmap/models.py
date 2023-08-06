@@ -72,6 +72,8 @@ class QgisPolygon(models.Model):
 class ColorLine(models.Model):
     geom = models.MultiLineStringField()
     capacity = models.CharField(max_length=100)
+    color = models.CharField(max_length=100)
+    # placement = models.CharField(max_length=100)
 
     def __str__(self):
         return self.capacity
@@ -84,6 +86,8 @@ class ColorLine(models.Model):
 class RealLine(models.Model):
     geom = models.MultiLineStringField()
     capacity = models.CharField(max_length=100)
+    color = models.CharField(max_length=100)
+
 
     def __str__(self):
         return self.capacity

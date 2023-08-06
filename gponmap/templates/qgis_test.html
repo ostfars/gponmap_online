@@ -116,8 +116,10 @@
                     var lineLayer = L.geoJSON(data, {
                         style: function(feature) {
                             var capacity = feature.properties.capacity;
+                            var lineColor = feature.properties.color;
+
                             return {
-                                color: getColorByCapacity(capacity),
+                                color: lineColor,
                                 dashArray: getStyleByCapacity(capacity),
                                 weight: 4,
                             };
@@ -145,8 +147,20 @@
                     var realLineLayer = L.geoJSON(data, {
                         style: function(feature) {
                             var capacity = feature.properties.capacity;
+                            var realLineColor = feature.properties.color;
+
+                            var capacity64Layer = L.geoJSON([], {
+                                style: {
+                                    color: realLineColor,
+                                    dashArray: getStyleByCapacity(4),
+                                    weight: 4,
+                                },
+                            });
+
+
+
                             return {
-                                color: getColorByCapacity(capacity),
+                                color: realLineColor,
                                 dashArray: getStyleByCapacity(capacity),
                                 weight: 4,
                             };
@@ -165,27 +179,27 @@
                 },
             });
 
-            function getColorByCapacity(capacity) {
-                if (capacity == 4) {
-                return '#0da606';
-                } else if (capacity == 8) {
-                return '#ff0400';
-                } else if (capacity == 16) {
-                return '#1f76b4';
-                } else if (capacity == 24) {
-                return '#f7801e';
-                } else if (capacity == 48) {
-                return '#2757cf';
-                } else if (capacity == 64) {
-                return '#ee06ee';
-                } else if (capacity == 641) {
-                return '#ee06ee';
-                } else if (capacity == 96) {
-                return '#7d7d7c';
-                } else {
-                return 'black';
-                }
-            }
+<!--            function getColorByCapacity(capacity) {-->
+<!--                if (capacity == 4) {-->
+<!--                return '#0da606';-->
+<!--                } else if (capacity == 8) {-->
+<!--                return '#ff0400';-->
+<!--                } else if (capacity == 16) {-->
+<!--                return '#1f76b4';-->
+<!--                } else if (capacity == 24) {-->
+<!--                return '#f7801e';-->
+<!--                } else if (capacity == 48) {-->
+<!--                return '#2757cf';-->
+<!--                } else if (capacity == 64) {-->
+<!--                return '#ee06ee';-->
+<!--                } else if (capacity == 641) {-->
+<!--                return '#ee06ee';-->
+<!--                } else if (capacity == 96) {-->
+<!--                return '#7d7d7c';-->
+<!--                } else {-->
+<!--                return 'black';-->
+<!--                }-->
+<!--            }-->
             
             function getStyleByCapacity(capacity) {
                 if (capacity == 641) {

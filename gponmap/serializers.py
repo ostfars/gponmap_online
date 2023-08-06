@@ -41,7 +41,7 @@ class ColorLineSerializer(serializers.GeoFeatureModelSerializer):
     class Meta:
         model = ColorLine
         geo_field = 'geom'
-        fields = ('capacity',)
+        fields = '__all__'
 
         def get_properties(self, instance, fields):
             properties = super().get_properties(instance, fields)
@@ -53,7 +53,7 @@ class RealLineSerializer(serializers.GeoFeatureModelSerializer):
     class Meta:
         model = ColorLine
         geo_field = 'geom'
-        fields = ('capacity',)
+        fields = ('__all__')
 
         def get_properties(self, instance, fields):
             properties = super().get_properties(instance, fields)

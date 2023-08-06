@@ -19,6 +19,10 @@ class QgisMapView(TemplateView):
     template_name = "qgis_test.html"
 
 
+class QgisNewMap(TemplateView):
+    template_name = "qgis_new.html"
+
+
 class QgisPointAPIView(ListAPIView):
     queryset = QgisPoint.objects.all()
     serializer_class = QgisPointSerializer
