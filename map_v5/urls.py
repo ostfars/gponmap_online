@@ -16,7 +16,7 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
-from gponmap.views import QgisPointAPIView, QgisPointsLineInfoAPIView, QgisLineAPIView, QgisPolygonAPIView, ColorLineAPIView, RealLineAPIView, QgisCouplingAPIView, QgisBStationAPIView, QgisOSBAPIView, QgisOSKMAPIView, kml_lines
+from gponmap.views import QgisPointAPIView, QgisPointsLineInfoAPIView, QgisLineAPIView, QgisPolygonAPIView, ColorLineAPIView, RealLineAPIView, QgisCouplingAPIView, QgisBStationAPIView, QgisOSBAPIView, QgisOSKMAPIView, kml_lines, pm4, oskm10
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -33,4 +33,7 @@ urlpatterns = [
     path('qgis_oskm', QgisOSKMAPIView.as_view(), name='oskm-api'),
     path('qgis_point_info', QgisPointsLineInfoAPIView.as_view(), name='points-info-api'),
     path('kml_lines', kml_lines, name='export_lines_to_kml'),
+    path('pm4/', pm4, name='PM4'),
+    path('oskm10/', oskm10, name='oskm10'),
+
 ]

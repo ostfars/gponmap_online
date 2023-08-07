@@ -94,3 +94,11 @@ def kml_lines(request):
     response['Content-Disposition'] = 'attachment; filename="export.kml"'
     response.write(kml)
     return response
+
+
+def pm4(request):
+    return render(request, 'PM4.html')
+
+
+def oskm10(request):
+    return render(request, 'oskm_10.html')
