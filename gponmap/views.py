@@ -6,6 +6,7 @@ from django.http import JsonResponse
 from django.http import HttpResponse
 from django.contrib.gis.geos import MultiLineString
 from django.contrib.gis.db.models.functions import AsKML
+import subprocess
 
 from .models import QgisPoint, QgisPointsLineInfo, QgisLine, QgisPolygon, ColorLine, RealLine, QgisCoupling, QgisBStation, QgisOSB, QgisOSKM, KMLLine
 from .serializers import QgisPointSerializer, QgisPointsLineInfoSerializer, QgisLineSerializer, QgisPolygonSerializer, ColorLineSerializer, RealLineSerializer, QgisCouplingSerializer, QgisBStationSerializer, QgisOSBSerializer, QgisOSKMSerializer
@@ -102,3 +103,18 @@ def pm4(request):
 
 def oskm10(request):
     return render(request, 'oskm_10.html')
+
+
+def export_to_kml(request):
+    # table_name = request.GET.get('table_name', '')
+    table_name = 'couplings_all'
+    kml_path = '/home/vladimir/output.kml'
+
+    command = f'ogr2ogr -f KML {kml_path} PG:"dbname=<gpondb> user=<postgres> password=<e2ad7c2437>" -sql "SELECT * FROM {table_name}"'
+    subprocess.call(command, shell=True)
+
+    # Отправка KML-файла как ответа API
+    with open(kml_path, 'rb') as file:
+        response = HttpResponse(file, content_type='application/vnd.google-earth.kml+xml')
+        response['Content-Disposition'] = f'attachment; filename="{table_name}.kml"'
+        return response
