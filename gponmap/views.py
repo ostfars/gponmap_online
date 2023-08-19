@@ -5,7 +5,9 @@ from django.http import JsonResponse
 
 from django.http import HttpResponse
 from django.contrib.gis.geos import MultiLineString
+from django.contrib.gis.shortcuts import render_to_kml
 from django.contrib.gis.db.models.functions import AsKML
+
 import subprocess
 
 from .models import QgisPoint, QgisPointsLineInfo, QgisLine, QgisPolygon, ColorLine, RealLine, QgisCoupling, QgisBStation, QgisOSB, QgisOSKM, KMLLine
@@ -106,8 +108,8 @@ def oskm10(request):
 
 
 def export_to_kml(request):
-    # table_name = request.GET.get('table_name', '')
-    table_name = 'couplings_all'
+    table_name = request.GET.get('table_name', '')
+    # table_name = 'couplings_all'
     kml_path = '/home/vladimir/output.kml'
 
     command = f'ogr2ogr -f KML {kml_path} PG:"dbname=<gpondb> user=<postgres> password=<e2ad7c2437>" -sql "SELECT * FROM {table_name}"'
@@ -118,3 +120,40 @@ def export_to_kml(request):
         response = HttpResponse(file, content_type='application/vnd.google-earth.kml+xml')
         response['Content-Disposition'] = f'attachment; filename="{table_name}.kml"'
         return response
+
+
+def render_line_to_kml(request):
+    color_lines = ColorLine.objects.all()
+    kml = render_to_kml('gponmap/lines.kml', {'locations': color_lines})
+    response = HttpResponse(kml, content_type='application/vnd.google-earth.kml+xml')
+    response['Content-Disposition'] = 'attachment; filename="lines.kml"'
+    return response
+
+
+def kml_all(request):
+
+    polygons = QgisPolygon.objects.all()
+    multilines = ColorLine.objects.all()
+    points = QgisPointsLineInfo.objects.all()
+
+    geometries = []
+
+    # Добавление полигонов
+    for polygon in polygons:
+        geometries.append(polygon.geom)
+
+    # Добавление мультилиний
+    for multilinestring in multilines:
+        geometries.append(multilinestring.geom)
+
+    # Добавление точек
+    for point in points:
+        geometries.append(point.geom)
+
+    # Создание геометрической коллекции
+    collection = GeometryCollection(geometries)
+
+    kml = collection.kml
+    response = HttpResponse(kml, content_type='application/vnd.google-earth.kml+xml')
+    response['Content-Disposition'] = 'attachment; filename="geometries.kml"'
+    return response
