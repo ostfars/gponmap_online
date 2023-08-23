@@ -110,10 +110,16 @@
                 } else if (properties.line_info_array == '[None]') {
                     pointContent += 'нет'
                 }
-                if (properties.p_owner && properties != 'None') {
+
+                if (properties.p_owner && properties.p_owner != null) {
                     pointContent += '<br><b>Собственник: </b>' + properties.p_owner
                 }
-
+                if (properties.p_type && properties.p_type != null) {
+                    pointContent += '<br><b>Тип опоры: </b>' + properties.p_type
+                }
+                if (properties.p_mount && properties.p_mount != null) {
+                    pointContent += '<br><b>Крепление: </b>' + properties.p_mount
+                }
 
                 return pointContent;
             }

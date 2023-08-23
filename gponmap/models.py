@@ -33,10 +33,13 @@ class QgisPoint(models.Model):
 class QgisPointsLineInfo(models.Model):
     geom = models.PointField()
     line_info_array = models.TextField(blank=True, null=True)
+    p_owner = models.CharField(max_length=80)
+    p_type = models.CharField(max_length=80)
+    p_mount = models.CharField(max_length=80)
 
     class Meta:
         managed = False
-        db_table = 'points_line_info_all'
+        db_table = 'infopoints_all'
 
 
 class QgisPointInfo(models.Model):
