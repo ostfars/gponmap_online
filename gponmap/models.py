@@ -90,6 +90,8 @@ class RealLine(models.Model):
     geom = models.MultiLineStringField()
     capacity = models.CharField(max_length=100)
     color = models.CharField(max_length=100)
+    cable_mark = models.CharField(max_length=256)
+    placement = models.CharField(max_length=100)
 
 
     def __str__(self):
