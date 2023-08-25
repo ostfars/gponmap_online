@@ -228,7 +228,11 @@
             
 
             function getPopupContent(properties) {
-                var popupContent = '<b>ВОК ' + properties.capacity + '</b>';
+                var popupContent = '<b>ВОК ' + properties.capacity + '</b><br><b>Марка кабеля: </b>' + properties.cable_mark;
+
+<!--                if (properties.cable_mark != 'null') {-->
+<!--                    popupContent += '<br><b>Марка кабеля: </b>' + properties.cable_mark;-->
+<!--                }-->
                 return popupContent;
             }
 

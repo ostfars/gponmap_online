@@ -53,7 +53,7 @@ class ColorLineAPIView(ListAPIView):
 
 class RealLineAPIView(ListAPIView):
     queryset = RealLine.objects.all()
-    serializer_class = ColorLineSerializer
+    serializer_class = RealLineSerializer
 
 
 class QgisCouplingAPIView(ListAPIView):

@@ -51,14 +51,15 @@ class ColorLineSerializer(serializers.GeoFeatureModelSerializer):
 
 class RealLineSerializer(serializers.GeoFeatureModelSerializer):
     class Meta:
-        model = ColorLine
+        model = RealLine
         geo_field = 'geom'
-        fields = ('__all__')
+        fields = '__all__'
 
-        def get_properties(self, instance, fields):
-            properties = super().get_properties(instance, fields)
-            properties['capacity'] = instance.capacity
-            return properties
+        # def get_properties(self, instance, fields):
+        #     properties = super().get_properties(instance, fields)
+        #     properties['capacity'] = instance.capacity
+        #     properties['']
+        #     return properties
 
 
 class QgisCouplingSerializer(serializers.GeoFeatureModelSerializer):
