@@ -183,7 +183,7 @@
                             };
                         },
                         onEachFeature: function(feature, layer) {
-                            layer.bindPopup(getPopupContent(feature.properties));
+                            layer.bindPopup(getRealLineContent(feature.properties));
                         },
                     });
                     realLineLayer.eachLayer(function(layer) {
@@ -228,11 +228,16 @@
             
 
             function getPopupContent(properties) {
-                var popupContent = '<b>ВОК ' + properties.capacity + '</b><br><b>Марка кабеля: </b>' + properties.cable_mark;
+                var popupContent = '<b>ВОК ' + properties.capacity + '</b>';
+                return popupContent;
+            }
 
-<!--                if (properties.cable_mark != 'null') {-->
-<!--                    popupContent += '<br><b>Марка кабеля: </b>' + properties.cable_mark;-->
-<!--                }-->
+            function getRealLineContent(properties) {
+                var popupContent = '<b>ВОК ' + properties.capacity+ '</b>';
+
+                if (properties.cable_mark != null) {
+                    popupContent += '<br><b>Кабель: </b> ' + properties.cable_mark;
+                }
                 return popupContent;
             }
 
