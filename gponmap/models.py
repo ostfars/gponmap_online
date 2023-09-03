@@ -106,6 +106,8 @@ class QgisCoupling(models.Model):
     geom = models.PointField()
     coupling = models.CharField(max_length=100)
     inform = models.CharField(max_length=1000)
+    p_comments = models.CharField(max_length=1000)
+    status = models.CharField(max_length=100)
 
     def __str__(self):
         return self.coupling
@@ -134,6 +136,8 @@ class QgisOSB(models.Model):
     geom = models.PointField()
     osb = models.CharField(max_length=100)
     inform = models.CharField(max_length=1000)
+    p_comments = models.CharField(max_length=1000)
+    status = models.CharField(max_length=100)
 
     def __str__(self):
         return self.osb
@@ -147,6 +151,8 @@ class QgisOSKM(models.Model):
     geom = models.PointField()
     oskm = models.CharField(max_length=100)
     inform = models.CharField(max_length=1000)
+    p_comments = models.CharField(max_length=1000)
+    status = models.CharField(max_length=100)
 
     def __str__(self):
         return self.oskm

@@ -272,10 +272,17 @@
             });
 
             function getCouplingContent(properties) {
-                var couplingContent = '<b>Муфта:</b> ' + properties.coupling + '<br>'
+                var couplingContent = '<b>Муфта:</b> ' + properties.coupling + '<br><b>Статус:</b> '
+                if (properties.status == '1') {
+                    couplingContent += 'построено'
+                } else if (properties.status == '0') {
+                    couplingContent += 'проект'
+                }
+                    couplingContent += '<br>'
                 if (properties.inform !== null) {
                     couplingContent += properties.inform;
                 }
+
                 return couplingContent;
             }
 
@@ -346,6 +353,13 @@
 
             function getOSBContent(properties) {
                 var osbContent = properties.osb;
+                osbContent += '<br><b>Статус: </b>'
+                if (properties.status == '1') {
+                    osbContent += 'построено'
+                } else if (properties.status == '0') {
+                    osbContent += 'проект'
+                }
+                osbContent += '<br>'
                 if (properties.inform !== null) {
                     osbContent += '<br>' + properties.inform;
                 }
@@ -384,6 +398,14 @@
 
             function getOSKMContent(properties) {
                 var oskmContent = properties.oskm;
+                oskmContent += '<br><b>Статус: </b>'
+                if (properties.status == '1') {
+                    oskmContent += 'построено'
+                } else if (properties.status == '0') {
+                    oskmContent += 'проект'
+                }
+                oskmContent += '<br>'
+
                 if (properties.inform !== null) {
                     oskmContent += '<br>' + properties.inform;
                 }
