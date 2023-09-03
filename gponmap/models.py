@@ -76,6 +76,7 @@ class ColorLine(models.Model):
     geom = models.MultiLineStringField()
     capacity = models.CharField(max_length=100)
     color = models.CharField(max_length=100)
+    status = models.CharField(max_length=2)
     # placement = models.CharField(max_length=100)
 
     def __str__(self):
@@ -92,6 +93,7 @@ class RealLine(models.Model):
     color = models.CharField(max_length=100)
     cable_mark = models.CharField(max_length=256)
     placement = models.CharField(max_length=100)
+    status = models.CharField(max_length=2)
 
 
     def __str__(self):

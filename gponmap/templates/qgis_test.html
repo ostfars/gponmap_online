@@ -228,13 +228,22 @@
             
 
             function getPopupContent(properties) {
-                var popupContent = '<b>ВОК ' + properties.capacity + '</b>';
+                var popupContent = '<b>ВОК ' + properties.capacity + '</b><br><b>Статус:</b> ';
+                if (properties.status == '1') {
+                    popupContent += 'построено'
+                } else if (properties.status == '0') {
+                    popupContent += 'проект';
+                }
                 return popupContent;
             }
 
             function getRealLineContent(properties) {
-                var popupContent = '<b>ВОК ' + properties.capacity+ '</b>';
-
+                var popupContent = '<b>ВОК ' + properties.capacity + '</b><br><b>Статус:</b> ';
+                if (properties.status == '1') {
+                    popupContent += 'построено'
+                } else if (properties.status == '0') {
+                    popupContent += 'проект';
+                }
                 if (properties.cable_mark != null) {
                     popupContent += '<br><b>Кабель: </b> ' + properties.cable_mark;
                 }

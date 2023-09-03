@@ -43,10 +43,10 @@ class ColorLineSerializer(serializers.GeoFeatureModelSerializer):
         geo_field = 'geom'
         fields = '__all__'
 
-        def get_properties(self, instance, fields):
-            properties = super().get_properties(instance, fields)
-            properties['capacity'] = instance.capacity
-            return properties
+        # def get_properties(self, instance, fields):
+        #     properties = super().get_properties(instance, fields)
+        #     properties['capacity'] = instance.capacity
+        #     return properties
             
 
 class RealLineSerializer(serializers.GeoFeatureModelSerializer):
