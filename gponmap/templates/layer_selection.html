@@ -1,0 +1,5 @@
+<form method="GET" action="{% url 'export_kml' %}">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit">Экспорт KML</button>
+</form>

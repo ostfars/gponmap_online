@@ -268,6 +268,7 @@
                             });
                         },
                         onEachFeature: function(feature, layer) {
+                            layer.bindTooltip(getCouplingTooltip(feature.properties), {permanent: true, opacity: 1}).openTooltip();
                             layer.bindPopup(getCouplingContent(feature.properties));
                         }
                     }).addTo(couplingLayer);
@@ -293,6 +294,11 @@
                 }
 
                 return couplingContent;
+            }
+
+            function getCouplingTooltip(properties) {
+                var couplingTooltip = '<b>Муфта:</b> ' + properties.coupling
+                return couplingTooltip;
             }
 
             // AJAX-запрос для получения данных базовых станций

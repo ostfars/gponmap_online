@@ -5,13 +5,19 @@ from django.http import JsonResponse
 
 from django.http import HttpResponse
 from django.contrib.gis.geos import MultiLineString
+
+from django.contrib.gis.geos import GEOSGeometry
+
 from django.contrib.gis.shortcuts import render_to_kml
 from django.contrib.gis.db.models.functions import AsKML
+from django.contrib.gis.gdal import DataSource
 
 import subprocess
 
 from .models import QgisPoint, QgisPointsLineInfo, QgisLine, QgisPolygon, ColorLine, RealLine, QgisCoupling, QgisBStation, QgisOSB, QgisOSKM, KMLLine
 from .serializers import QgisPointSerializer, QgisPointsLineInfoSerializer, QgisLineSerializer, QgisPolygonSerializer, ColorLineSerializer, RealLineSerializer, QgisCouplingSerializer, QgisBStationSerializer, QgisOSBSerializer, QgisOSKMSerializer
+
+from .forms import KMLLayerForm
 
 
 class GponmapView(TemplateView):
@@ -78,7 +84,7 @@ class QgisOSKMAPIView(ListAPIView):
 
 def kml_lines(request):
     # Извлекаем мультилинии из базы данных
-    multilines = KMLLine.objects.all()
+    multilines = ColorLine.objects.all()
 
     # Преобразуем мультилинии в KML
     kml = '<kml xmlns="http://www.opengis.net/kml/2.2">'
@@ -87,7 +93,7 @@ def kml_lines(request):
         kml += '<Placemark>'
         kml += '<name>Линия</name>'
         kml += '<description>ВОК' + multiline.capacity + '</description>'
-        kml += AsKML(multiline.geom)
+        kml += multiline.geom_kml
         kml += '</Placemark>'
     kml += '</Document>'
     kml += '</kml>'
@@ -157,3 +163,146 @@ def kml_all(request):
     response = HttpResponse(kml, content_type='application/vnd.google-earth.kml+xml')
     response['Content-Disposition'] = 'attachment; filename="geometries.kml"'
     return response
+
+
+def download_kml_view(request):
+    # Получение данные из каждой таблицы PostGIS.
+    # pillars = QgisPointsLineInfo.objects.all()
+    # couplers = QgisCoupling.objects.all()
+    # oskm = QgisOSKM.objects.all()
+    # osb = QgisOSB.objects.all()
+    # bstations = QgisBStation.objects.all()
+    # polygons = QgisPolygon.objects.all()
+    # multilines = ColorLine.objects.all()
+
+    # Создание пустого KML-документа.
+    kml = '<?xml version="1.0" encoding="UTF-8"?>\n<kml xmlns="http://www.opengis.net/kml/2.2">\n<Document>\n'
+
+    # Загрузка данных из таблиц PostGIS с разными геометрическими типами.
+    data_sources = [
+        DataSource('infopoints_all'),
+        DataSource('colorlines_all'),
+        DataSource('polygons_info_all'),
+    ]
+
+    # Добавление данных каждой таблицы в KML.
+    # kml += LayerMapping(pillars, {'geom': 'Point'}, name='Опоры').kml()
+    # kml += LayerMapping(couplers, {'geom': 'Point'}, name='Муфты').kml()
+    # kml += LayerMapping(oskm, {'geom': 'Point'}, name='ОСКМ').kml()
+    # kml += LayerMapping(osb, {'geom': 'Point'}, name='ОСБ').kml()
+    # kml += LayerMapping(bstations, {'geom': 'Point'}, name='Базовые станции').kml()
+    # kml += LayerMapping(polygons, {'geom': 'Polygon'}, name='Покрытие').kml()
+    # kml += LayerMapping(multilines, {'geom': 'MultiLineString'}, name='Линии').kml()
+
+    for data_source in data_sources:
+        layer = data_source[0]
+
+        for feature in layer:
+            kml += f'<Placemark>\n<name>{feature.name}</name>\n'
+            kml += f'<description>{feature.description}</description>\n'
+            kml += f'{feature.geom.kml}\n'  # Поле 'geom' должно содержать геометрию.
+            kml += '</Placemark>\n'
+
+    # Закрытие KML-документф.
+    kml += '</Document>\n</kml>'
+
+    # Возврат KML в ответе.
+    response = HttpResponse(kml, content_type='application/vnd.google-earth.kml+xml')
+    response['Content-Disposition'] = 'attachment; filename="data.kml"'
+    return response
+
+
+def export_kml(request):
+    kml = '<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2">'
+
+    if 'layer1' in request.GET:
+        kml += '<Folder>'
+        layer1 = QgisPointsLineInfo.objects.annotate(geom_kml=AsKML('geom'))
+        for obj in layer1:
+            kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+        kml += '</Folder>'
+
+    if 'layer2' in request.GET:
+        kml += '<Folder>'
+        layer2 = QgisOSB.objects.annotate(geom_kml=AsKML('geom'))
+        for obj in layer2:
+            kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+        kml += '</Folder>'
+
+    if 'layer3' in request.GET:
+        kml += '<Folder>'
+        layer3 = QgisOSKM.objects.annotate(geom_kml=AsKML('geom'))
+        for obj in layer3:
+            kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+        kml += '</Folder>'
+
+    if 'layer4' in request.GET:
+        kml += '<Folder>'
+        layer3 = QgisCoupling.objects.annotate(geom_kml=AsKML('geom'))
+        for obj in layer3:
+            kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+        kml += '</Folder>'
+
+    if 'layer5' in request.GET:
+        kml += '<Folder>'
+        layer1 = QgisBStation.objects.annotate(geom_kml=AsKML('geom'))
+        for obj in layer1:
+            kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+        kml += '</Folder>'
+
+    if 'layer6' in request.GET:
+        kml += '<Folder>'
+        layer2 = QgisPolygon.objects.annotate(geom_kml=AsKML('geom'))
+        for obj in layer2:
+            kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+        kml += '</Folder>'
+
+    if 'layer7' in request.GET:
+        kml += '<Folder>'
+        layer3 = ColorLine.objects.annotate(geom_kml=AsKML('geom'))
+        for obj in layer3:
+            kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+        kml += '</Folder>'
+
+    if 'layer8' in request.GET:
+        kml += '<Folder>'
+        layer3 = RealLine.objects.annotate(geom_kml=AsKML('geom'))
+        for obj in layer3:
+            kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+        kml += '</Folder>'
+
+    kml += '</kml>'
+    response = HttpResponse(kml, content_type='application/vnd.google-earth.kml+xml')
+    response['Content-Disposition'] = 'attachment; filename="export.kml"'
+    return response
+
+
+def kml_layer_selection(request):
+    if request.method == 'POST':
+        form = KMLLayerForm(request.POST)
+        if form.is_valid():
+            # Обработка выбранных слоев
+            selected_layers = []
+            if form.cleaned_data['layer1']:
+                selected_layers.append('layer1')
+            if form.cleaned_data['layer2']:
+                selected_layers.append('layer2')
+            if form.cleaned_data['layer3']:
+                selected_layers.append('layer3')
+            if form.cleaned_data['layer4']:
+                selected_layers.append('layer4')
+            if form.cleaned_data['layer5']:
+                selected_layers.append('layer5')
+            if form.cleaned_data['layer6']:
+                selected_layers.append('layer6')
+            if form.cleaned_data['layer7']:
+                selected_layers.append('layer7')
+            if form.cleaned_data['layer8']:
+                selected_layers.append('layer8')
+
+            # Выполнение экспорта KML с выбранными слоями
+
+    else:
+        form = KMLLayerForm()
+
+    return render(request, 'layer_selection.html', {'form': form})

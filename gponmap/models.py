@@ -77,6 +77,7 @@ class ColorLine(models.Model):
     capacity = models.CharField(max_length=100)
     color = models.CharField(max_length=100)
     status = models.CharField(max_length=2)
+    # geom_kml = models.CharField(max_length=10000)
     # placement = models.CharField(max_length=100)
 
     def __str__(self):
