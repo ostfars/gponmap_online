@@ -229,8 +229,10 @@
 
             function getPopupContent(properties) {
                 var popupContent = '<b>ВОК ' + properties.capacity + '</b><br><b>Статус:</b> ';
-                if (properties.status == '1') {
+                if (properties.status == '1' && properties.cable_mark != null) {
                     popupContent += 'построено<br><b>Кабель: </b> ' + properties.cable_mark
+                } else if (properties.status == '1' && properties.cable_mark == null) {
+                    popupContent += 'построено'
                 } else if (properties.status == '0') {
                     popupContent += 'проект';
                 }
