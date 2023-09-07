@@ -77,6 +77,8 @@ class ColorLine(models.Model):
     capacity = models.CharField(max_length=100)
     color = models.CharField(max_length=100)
     status = models.CharField(max_length=2)
+    cable_mark = models.CharField(max_length=256)
+
     # geom_kml = models.CharField(max_length=10000)
     # placement = models.CharField(max_length=100)
 

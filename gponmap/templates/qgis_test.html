@@ -230,7 +230,7 @@
             function getPopupContent(properties) {
                 var popupContent = '<b>ВОК ' + properties.capacity + '</b><br><b>Статус:</b> ';
                 if (properties.status == '1') {
-                    popupContent += 'построено'
+                    popupContent += 'построено<br><b>Кабель: </b> ' + properties.cable_mark
                 } else if (properties.status == '0') {
                     popupContent += 'проект';
                 }
@@ -268,7 +268,7 @@
                             });
                         },
                         onEachFeature: function(feature, layer) {
-                            layer.bindTooltip(getCouplingTooltip(feature.properties), {permanent: true, opacity: 1}).openTooltip();
+                            layer.bindTooltip(getCouplingTooltip(feature.properties), {permanent: true, opacity: 0.9}).openTooltip();
                             layer.bindPopup(getCouplingContent(feature.properties));
                         }
                     }).addTo(couplingLayer);
@@ -354,6 +354,7 @@
                             });
                         },
                         onEachFeature: function(feature, layer) {
+                            layer.bindTooltip(getOSBTooltip(feature.properties), {permanent: true, opacity: 0.9}).openTooltip();
                             layer.bindPopup(getOSBContent(feature.properties));
                         }
                     }).addTo(osbLayer);
@@ -381,6 +382,11 @@
                 return osbContent;
             }
 
+            function getOSBTooltip(properties) {
+                var OSBTooltip = properties.osb
+                return OSBTooltip;
+            }
+
             // AJAX-запрос для получения данных ОСКМ
             $.ajax({
                 url: baseUrl + '/qgis_oskm',
@@ -399,6 +405,7 @@
                             });
                         },
                         onEachFeature: function(feature, layer) {
+                            layer.bindTooltip(getOSKMTooltip(feature.properties), {permanent: true, opacity: 0.9}).openTooltip();
                             layer.bindPopup(getOSKMContent(feature.properties));
                         }
                     }).addTo(oskmLayer);
@@ -427,6 +434,10 @@
                 return oskmContent;
             }
 
+            function getOSKMTooltip(properties) {
+                var OSKMTooltip = properties.oskm
+                return OSKMTooltip;
+            }
 
             // AJAX-запрос для получения данных полигонов
             $.ajax({
