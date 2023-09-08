@@ -238,36 +238,52 @@ def export_kml(request):
 
     if 'layer4' in request.GET:
         kml += '<Folder>'
-        layer3 = QgisCoupling.objects.annotate(geom_kml=AsKML('geom'))
-        for obj in layer3:
+        layer4 = QgisCoupling.objects.annotate(geom_kml=AsKML('geom'))
+        for obj in layer4:
             kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
         kml += '</Folder>'
 
     if 'layer5' in request.GET:
         kml += '<Folder>'
-        layer1 = QgisBStation.objects.annotate(geom_kml=AsKML('geom'))
-        for obj in layer1:
+        layer5 = QgisBStation.objects.annotate(geom_kml=AsKML('geom'))
+        for obj in layer5:
             kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
         kml += '</Folder>'
 
     if 'layer6' in request.GET:
         kml += '<Folder>'
-        layer2 = QgisPolygon.objects.annotate(geom_kml=AsKML('geom'))
-        for obj in layer2:
+        layer6 = QgisPolygon.objects.annotate(geom_kml=AsKML('geom'))
+        for obj in layer6:
             kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
         kml += '</Folder>'
 
+    # if 'layer7' in request.GET:
+    #     kml += '<Folder>'
+    #     layer7 = ColorLine.objects.annotate(geom_kml=AsKML('geom'))
+    #     for obj in layer7:
+    #         kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+    #     kml += '</Folder>'
+
     if 'layer7' in request.GET:
+
+        layer7 = ColorLine.objects.all()
+
         kml += '<Folder>'
-        layer3 = ColorLine.objects.annotate(geom_kml=AsKML('geom'))
-        for obj in layer3:
+        for obj in layer7:
+            kml += '<Placemark>'
+            kml += '<name><b>ВОК' + multiline.capacity + '</b></name>'
+            kml += '<description>ВОК' + multiline.capacity + '</description>'
+            kml += multiline.geom_kml
+            kml += '</Placemark>'
+
+
             kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
         kml += '</Folder>'
 
     if 'layer8' in request.GET:
         kml += '<Folder>'
-        layer3 = RealLine.objects.annotate(geom_kml=AsKML('geom'))
-        for obj in layer3:
+        layer8 = RealLine.objects.annotate(geom_kml=AsKML('geom'))
+        for obj in layer8:
             kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
         kml += '</Folder>'
 
