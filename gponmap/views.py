@@ -265,19 +265,23 @@ def export_kml(request):
     #     kml += '</Folder>'
 
     if 'layer7' in request.GET:
-
-        layer7 = ColorLine.objects.all()
-
         kml += '<Folder>'
+        layer7 = ColorLine.objects.annotate(geom_kml=AsKML('geom'))
         for obj in layer7:
             kml += '<Placemark>'
-            kml += '<name><b>ВОК' + multiline.capacity + '</b></name>'
-            kml += '<description>ВОК' + multiline.capacity + '</description>'
-            kml += multiline.geom_kml
-            kml += '</Placemark>'
+            kml += '<name><b>ВОК' + obj.capacity + '</b></name>'
 
+            kml += '<description><b>Статус: </b>'
+            if obj.status == 0:
+                kml += 'проект'
+            elif obj.status == 1:
+                kml += 'построено'
+            if obj.cable_mark is not None:
+                kml += '<br><b>Кабель: </b>' + obj.cable_mark
+            kml += '</description>'
 
-            kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+            # kml += '<Style><LineStyle><color>FF' + obj.color[1:] + '</color><width>4</width></LineStyle></Style>'
+            kml += '{}</Placemark>'.format(obj.geom_kml)
         kml += '</Folder>'
 
     if 'layer8' in request.GET:
