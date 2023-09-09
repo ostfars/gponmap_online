@@ -269,18 +269,18 @@ def export_kml(request):
         layer7 = ColorLine.objects.annotate(geom_kml=AsKML('geom'))
         for obj in layer7:
             kml += '<Placemark>'
-            kml += '<name><b>ВОК' + obj.capacity + '</b></name>'
+            kml += '<name><![CDATA[<b>ВОК' + obj.capacity + '</b>]]></name>'
 
-            kml += '<description><b>Статус: </b>'
+            kml += '<description><![CDATA[<b>Статус: </b>'
             if obj.status == 0:
                 kml += 'проект'
             elif obj.status == 1:
                 kml += 'построено'
             if obj.cable_mark is not None:
                 kml += '<br><b>Кабель: </b>' + obj.cable_mark
-            kml += '</description>'
+            kml += ']]></description>'
 
-            # kml += '<Style><LineStyle><color>FF' + obj.color[1:] + '</color><width>4</width></LineStyle></Style>'
+            kml += '<Style><LineStyle><color>FF' + obj.color[1:] + '</color><width>4</width></LineStyle></Style>'
             kml += '{}</Placemark>'.format(obj.geom_kml)
         kml += '</Folder>'
 
