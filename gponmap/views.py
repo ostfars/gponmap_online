@@ -14,10 +14,16 @@ from django.contrib.gis.gdal import DataSource
 
 import subprocess
 
-from .models import QgisPoint, QgisPointsLineInfo, QgisLine, QgisPolygon, ColorLine, RealLine, QgisCoupling, QgisBStation, QgisOSB, QgisOSKM, KMLLine
-from .serializers import QgisPointSerializer, QgisPointsLineInfoSerializer, QgisLineSerializer, QgisPolygonSerializer, ColorLineSerializer, RealLineSerializer, QgisCouplingSerializer, QgisBStationSerializer, QgisOSBSerializer, QgisOSKMSerializer
+from .models import QgisPoint, QgisPointsLineInfo, QgisLine, QgisPolygon, ColorLine, RealLine, QgisCoupling, \
+    QgisBStation, QgisOSB, QgisOSKM, KMLLine
+from .serializers import QgisPointSerializer, QgisPointsLineInfoSerializer, QgisLineSerializer, QgisPolygonSerializer, \
+    ColorLineSerializer, RealLineSerializer, QgisCouplingSerializer, QgisBStationSerializer, QgisOSBSerializer, QgisOSKMSerializer
 
 from .forms import KMLLayerForm
+
+
+class IndexView(TemplateView):
+    template_name = "index.html"
 
 
 class GponmapView(TemplateView):
