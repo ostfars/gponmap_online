@@ -22,6 +22,7 @@ from gponmap.views import QgisPointAPIView, QgisPointsLineInfoAPIView, QgisLineA
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('accounts/', include('django.contrib.auth.urls')),
     path("api/", include("gponmap.api")),
     path('gponmap/', include('gponmap.urls')),
     path('qgis_point', QgisPointAPIView.as_view(), name='points-api'),
@@ -43,5 +44,7 @@ urlpatterns = [
     path('download_kml/', download_kml_view, name='download_kml'),
     path('export_kml/', export_kml, name='export_kml'),
     path('kml_layer_selection/', kml_layer_selection, name='kml_layer_selection'),
-    path('', IndexView.as_view(), name='index')
+    path('', IndexView.as_view(), name='index'),
+
+    path('layer_selection.html', kml_layer_selection, name='kml_layer_selection'),
 ]

@@ -263,13 +263,6 @@ def export_kml(request):
             kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
         kml += '</Folder>'
 
-    # if 'layer7' in request.GET:
-    #     kml += '<Folder>'
-    #     layer7 = ColorLine.objects.annotate(geom_kml=AsKML('geom'))
-    #     for obj in layer7:
-    #         kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
-    #     kml += '</Folder>'
-
     if 'layer7' in request.GET:
         kml += '<Folder>'
         layer7 = ColorLine.objects.annotate(geom_kml=AsKML('geom'))
