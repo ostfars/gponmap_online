@@ -1,5 +1,9 @@
 {% extends "base_generic.html" %}
 
+{% block sidebar %}
+    {% include 'layer_selection.html' %}
+{% endblock %}
+
 {% block content %}
     <div id="map"></div>
 
