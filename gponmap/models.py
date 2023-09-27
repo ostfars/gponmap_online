@@ -178,3 +178,11 @@ class KMLLine(models.Model):
     class Meta:
         managed = False
         db_table = 'colorlines_all'
+
+
+class AddKMLData(models.Model):
+    geom = models.PointField(dim=3, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'kml_data'

@@ -1,10 +1,10 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic.base import TemplateView
 from rest_framework.generics import ListAPIView
 from django.http import JsonResponse
 
 from django.http import HttpResponse
-from django.contrib.gis.geos import MultiLineString
+from django.contrib.gis.geos import MultiLineString, Point
 
 from django.contrib.gis.geos import GEOSGeometry
 
@@ -12,14 +12,18 @@ from django.contrib.gis.shortcuts import render_to_kml
 from django.contrib.gis.db.models.functions import AsKML
 from django.contrib.gis.gdal import DataSource
 
+from lxml import etree
+
+import binascii
+
 import subprocess
 
 from .models import QgisPoint, QgisPointsLineInfo, QgisLine, QgisPolygon, ColorLine, RealLine, QgisCoupling, \
-    QgisBStation, QgisOSB, QgisOSKM, KMLLine
+    QgisBStation, QgisOSB, QgisOSKM, KMLLine, AddKMLData
 from .serializers import QgisPointSerializer, QgisPointsLineInfoSerializer, QgisLineSerializer, QgisPolygonSerializer, \
     ColorLineSerializer, RealLineSerializer, QgisCouplingSerializer, QgisBStationSerializer, QgisOSBSerializer, QgisOSKMSerializer
 
-from .forms import KMLLayerForm
+from .forms import KMLLayerForm, KMLUploadForm
 
 
 class IndexView(TemplateView):
@@ -325,3 +329,38 @@ def kml_layer_selection(request):
         form = KMLLayerForm()
 
     return render(request, 'layer_selection.html', {'form': form})
+
+
+def upload_kml(request):
+    if request.method == 'POST':
+        form = KMLUploadForm(request.POST, request.FILES)
+        if form.is_valid():
+            kml_file = request.FILES['kml_file']
+            try:
+                tree = etree.parse(kml_file)
+                root = tree.getroot()
+                placemarks = root.findall(".//{http://www.opengis.net/kml/2.2}Placemark")
+
+                for placemark in placemarks:
+                    # name = placemark.find("{http://www.opengis.net/kml/2.2}name").text
+                    coordinates = placemark.find(".//{http://www.opengis.net/kml/2.2}coordinates").text
+                    coordinates = coordinates.strip()
+                    lon, lat, _ = coordinates.split(',')  # KML координаты: долгота, широта, высота
+
+                    # Создаем объект Point
+                    point = Point(float(lon), float(lat), 0)
+
+                    wkb = point.wkb
+                    wkb_hex_upper = binascii.hexlify(wkb).decode().upper()
+
+                    try:
+                        AddKMLData.objects.create(geom=point)
+                    except Exception as e:
+                        print(f"Ошибка при создании записи: {e}")
+
+                # return redirect('success_page')  # Перенаправьте на страницу успешной загрузки
+            except Exception as e:
+                return render(request, 'upload_kml.html', {'form': form, 'error_message': f"Ошибка при парсинге KML: {e}"})
+    else:
+        form = KMLUploadForm()
+    return render(request, 'upload_kml.html', {'form': form})

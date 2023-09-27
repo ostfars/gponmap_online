@@ -10,3 +10,7 @@ class KMLLayerForm(forms.Form):
     layer6 = forms.BooleanField(required=False, label='Покрытие')
     layer7 = forms.BooleanField(required=False, label='Линии проектные')
     layer8 = forms.BooleanField(required=False, label='Линии фактические')
+
+
+class KMLUploadForm(forms.Form):
+    kml_file = forms.FileField()
