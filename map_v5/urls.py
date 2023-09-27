@@ -48,6 +48,9 @@ urlpatterns = [
     path('', IndexView.as_view(), name='index'),
 
     path('layer_selection.html', kml_layer_selection, name='kml_layer_selection'),
+
     path('upload_kml/', upload_kml, name='upload_kml'),
+    path('export_kml.html', export_kml, name='export_kml'),
+
 
 ]

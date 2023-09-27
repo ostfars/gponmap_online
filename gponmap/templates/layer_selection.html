@@ -1,5 +1,23 @@
-<form method="GET" action="{% url 'export_kml' %}">
-  {% csrf_token %}
-  {{ form.as_p }}
-  <button type="submit">Экспорт KML</button>
-</form>
+{% extends "base.html" %}
+{% block content %}
+<h2>Экспорт KML</h2>
+
+{% if user.is_authenticated %}
+    <p>Привет, {{ user.username }}! </p>
+    <p><a href="{% url 'logout' %}">Выйти</a></p>
+<div>
+
+  <form method="GET" action="{% url 'export_kml' %}">
+    {% csrf_token %}
+    {{ form.as_p }}
+    <button type="submit">Экспорт KML</button>
+  </form>
+</div>
+
+    {% else %}
+        <p>Вы не вошли в систему</p>
+        <a href="{% url 'login' %}">Войти</a>
+    {% endif %}
+
+  {% endblock %}
+
