@@ -345,7 +345,7 @@ def upload_kml(request):
                     # name = placemark.find("{http://www.opengis.net/kml/2.2}name").text
                     coordinates = placemark.find(".//{http://www.opengis.net/kml/2.2}coordinates").text
                     coordinates = coordinates.strip()
-                    lon, lat, _ = coordinates.split(',')  # KML координаты: долгота, широта, высота
+                    lon, lat, *_ = coordinates.split(',')  # KML координаты: долгота, широта, высота
 
                     # Создаем объект Point
                     point = Point(float(lon), float(lat), 0)
