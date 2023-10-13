@@ -331,6 +331,59 @@ def kml_layer_selection(request):
     return render(request, 'layer_selection.html', {'form': form})
 
 
+# def process_placemarks(placemarks):
+#     for placemark in placemarks:
+#         coordinates = placemark.find(".//{http://www.opengis.net/kml/2.2}coordinates").text
+#         coordinates = coordinates.strip()
+#         lon, lat, *_ = coordinates.split(',')  # KML координаты: долгота, широта, высота
+#
+#         # Создаем геометрию Point
+#         point = Point(float(lon), float(lat), 0)
+#         print(point)
+#
+#         # Создаем запись в таблице KMLData
+#         KMLData.objects.create(geom=point)
+#
+#         try:
+#             AddKMLData.objects.create(geom=point)
+#         except Exception as e:
+#             print(f"Ошибка при создании записи: {e}")
+#
+#
+# def process_folders(folders):
+#     for folder in folders:
+#         placemarks = folder.findall(".//{http://www.opengis.net/kml/2.2}Placemark")
+#
+#         process_placemarks(placemarks)
+#
+# def upload_kml(request):
+#     if request.method == 'POST':
+#         form = KMLUploadForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             kml_file = request.FILES['kml_file']
+#             try:
+#                 tree = etree.parse(kml_file)
+#                 root = tree.getroot()
+#                 print(root)
+#
+#                 # Обрабатываем плейсмарки в корневой папке
+#                 placemarks = root.findall(".//{http://www.opengis.net/kml/2.2}Placemark")
+#                 print(placemarks)
+#                 process_placemarks(placemarks)
+#
+#                 # Обрабатываем плейсмарки во всех вложенных папках
+#                 folders = root.findall(".//{http://www.opengis.net/kml/2.2}Folder")
+#                 print(folders)
+#                 process_folders(folders)
+#
+#             except Exception as e:
+#                 return render(request, 'upload_kml.html',
+#                               {'form': form, 'error_message': f"Ошибка при парсинге KML: {e}"})
+#     else:
+#         form = KMLUploadForm()
+#     return render(request, 'upload_kml.html', {'form': form})
+
+
 def upload_kml(request):
     if request.method == 'POST':
         form = KMLUploadForm(request.POST, request.FILES)
@@ -339,7 +392,13 @@ def upload_kml(request):
             try:
                 tree = etree.parse(kml_file)
                 root = tree.getroot()
-                placemarks = root.findall(".//{http://www.opengis.net/kml/2.2}Placemark")
+                print(root)
+
+                folder = root.find(".//{http://www.opengis.net/kml/2.2}Folder")
+                print(folder)
+
+                placemarks = folder.findall(".//{http://www.opengis.net/kml/2.2}Placemark")
+                print(placemarks)
 
                 for placemark in placemarks:
                     # name = placemark.find("{http://www.opengis.net/kml/2.2}name").text
@@ -349,9 +408,12 @@ def upload_kml(request):
 
                     # Создаем объект Point
                     point = Point(float(lon), float(lat), 0)
+                    print(point)
 
-                    wkb = point.wkb
-                    wkb_hex_upper = binascii.hexlify(wkb).decode().upper()
+                    # Этот код ддля postgis не нужен
+                    # wkb = point.wkb
+                    # wkb_hex_upper = binascii.hexlify(wkb).decode().upper()
+                    # print(wkb_hex_upper)
 
                     try:
                         AddKMLData.objects.create(geom=point)
@@ -364,3 +426,38 @@ def upload_kml(request):
     else:
         form = KMLUploadForm()
     return render(request, 'upload_kml.html', {'form': form})
+
+
+# def process_placemarks(node):
+#     placemarks = node.findall(".//{http://www.opengis.net/kml/2.2}Placemark")
+#     print(placemarks)
+#     for placemark in placemarks:
+#         # name = placemark.find("{http://www.opengis.net/kml/2.2}name").text
+#         coordinates = placemark.find(".//{http://www.opengis.net/kml/2.2}coordinates").text
+#         lon, lat, *_ = coordinates.split(',')
+#         point = Point(float(lon), float(lat), 0)  # Создаем геометрию Point
+#         print(point)
+#         KMLData.objects.create(geom=point)  # Создаем запись в таблице KMLData
+#
+#     # Рекурсивно обрабатываем вложенные ноды (в том числе папки)
+#     for child_node in node.findall(".//"):
+#         process_placemarks(child_node)
+#
+#
+# def upload_kml(request):
+#     if request.method == 'POST':
+#         form = KMLUploadForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             kml_file = request.FILES['kml_file']
+#             try:
+#                 tree = etree.parse(kml_file)
+#                 root = tree.getroot()
+#
+#                 # Обрабатываем плейсмарки во всех уровнях вложенности
+#                 process_placemarks(root)
+#
+#             except Exception as e:
+#                 return render(request, 'upload_kml.html', {'form': form, 'error_message': f"Ошибка при парсинге KML: {e}"})
+#     else:
+#         form = KMLUploadForm()
+#     return render(request, 'upload_kml.html', {'form': form})
