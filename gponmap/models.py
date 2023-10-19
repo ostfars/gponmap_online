@@ -186,3 +186,27 @@ class AddKMLData(models.Model):
     class Meta:
         managed = False
         db_table = 'kml_data'
+
+
+class UploadKMLPoint(models.Model):
+    geom = models.PointField(dim=3, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'upload_kml_points'
+
+
+class UploadKMLLine(models.Model):
+    geom = models.LineStringField(dim=3, blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'upload_kml_lines'
+
+
+class UploadKMLPolygon(models.Model):
+    geom = models.MultiPolygonField(blank=True, null=True)
+
+    class Meta:
+        managed = False
+        db_table = 'upload_kml_polygon'
