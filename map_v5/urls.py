@@ -19,7 +19,7 @@ from django.urls import path, include
 from gponmap.views import QgisPointAPIView, QgisPointsLineInfoAPIView, QgisLineAPIView, QgisPolygonAPIView, \
     ColorLineAPIView, RealLineAPIView, QgisCouplingAPIView, QgisBStationAPIView, QgisOSBAPIView, QgisOSKMAPIView, \
     kml_lines, pm4, oskm10, export_to_kml, kml_all, download_kml_view, export_kml, kml_layer_selection, IndexView, \
-    upload_kml
+    upload_kml, google_earth_kml
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -51,6 +51,7 @@ urlpatterns = [
 
     path('upload_kml/', upload_kml, name='upload_kml'),
     path('export_kml.html', export_kml, name='export_kml'),
-
+    path('google_kml', google_earth_kml, name='google_earth_kml'),
+    path('google_kml.kml', google_earth_kml, name='google_earth_kml'),
 
 ]

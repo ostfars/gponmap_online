@@ -435,3 +435,81 @@ def upload_kml(request):
     else:
         form = KMLUploadForm()
     return render(request, 'upload_kml.html', {'form': form})
+
+
+def google_earth_kml(request):
+    kml = '<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2">'
+
+    #     kml += '<Folder>'
+    #     layer1 = QgisPointsLineInfo.objects.annotate(geom_kml=AsKML('geom'))
+    #     for obj in layer1:
+    #         kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+    #     kml += '</Folder>'
+
+    kml += '<Document>'
+    kml += '<Folder>'
+    kml += '<name>ОСБ</name>'
+    osb_layer = QgisOSB.objects.annotate(geom_kml=AsKML('geom'))
+    for obj in osb_layer:
+        kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+    kml += '</Folder>'
+
+    kml += '<Folder>'
+    kml += '<name>ОСКМ</name>'
+    oskm_layer = QgisOSKM.objects.annotate(geom_kml=AsKML('geom'))
+    for obj in oskm_layer:
+        kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+    kml += '</Folder>'
+
+    kml += '<Folder>'
+    kml += '<name>Муфты</name>'
+    coupler_layer = QgisCoupling.objects.annotate(geom_kml=AsKML('geom'))
+    for obj in coupler_layer:
+        kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+    kml += '</Folder>'
+
+    kml += '<Folder>'
+    kml += '<name>Базовые станции</name>'
+    bs_layer = QgisBStation.objects.annotate(geom_kml=AsKML('geom'))
+    for obj in bs_layer:
+        kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+    kml += '</Folder>'
+
+    kml += '<Folder>'
+    kml += '<name>Покрытие</name>'
+    polygon_layer = QgisPolygon.objects.annotate(geom_kml=AsKML('geom'))
+    for obj in polygon_layer:
+        kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+    kml += '</Folder>'
+
+    kml += '<Folder>'
+    kml += '<name>Линии</name>'
+    line_layer = ColorLine.objects.annotate(geom_kml=AsKML('geom'))
+    for obj in line_layer:
+        kml += '<Placemark>'
+        kml += '<name><![CDATA[<b>ВОК' + obj.capacity + '</b>]]></name>'
+
+        kml += '<description><![CDATA[<b>Статус: </b>'
+        if obj.status == 0:
+            kml += 'проект'
+        elif obj.status == 1:
+            kml += 'построено'
+        if obj.cable_mark is not None:
+            kml += '<br><b>Кабель: </b>' + obj.cable_mark
+        kml += ']]></description>'
+
+        kml += '<Style><LineStyle><color>FF' + obj.color[1:] + '</color><width>4</width></LineStyle></Style>'
+        kml += '{}</Placemark>'.format(obj.geom_kml)
+    kml += '</Folder>'
+    #
+    # if 'layer8' in request.GET:
+    #     kml += '<Folder>'
+    #     layer8 = RealLine.objects.annotate(geom_kml=AsKML('geom'))
+    #     for obj in layer8:
+    #         kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+    #     kml += '</Folder>'
+
+    kml += '</Document>'
+    kml += '</kml>'
+    response = HttpResponse(kml, content_type='application/vnd.google-earth.kml+xml')
+    return response

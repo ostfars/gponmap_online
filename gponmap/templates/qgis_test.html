@@ -138,7 +138,7 @@
                             return {
                                 color: lineColor,
                                 dashArray: getStyleByCapacity(capacity),
-                                weight: 4,
+                                weight: getWeightByCapacity(capacity),
                             };
                         },
                         onEachFeature: function(feature, layer) {
@@ -226,6 +226,13 @@
                 }
             }
             
+            function getWeightByCapacity(capacity) {
+                if (capacity == 1000) {
+                return '2';
+                } else {
+                return '4';
+                }
+            }
 
             function getPopupContent(properties) {
                 var popupContent = '<b>ВОК ' + properties.capacity + '</b><br><b>Статус:</b> ';
