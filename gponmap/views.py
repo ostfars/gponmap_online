@@ -451,28 +451,52 @@ def google_earth_kml(request):
     kml += '<name>ОСБ</name>'
     osb_layer = QgisOSB.objects.annotate(geom_kml=AsKML('geom'))
     for obj in osb_layer:
-        kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+        kml += '<Placemark>'
+        if isinstance(obj.osb, str):
+            kml += '<name>'
+            kml += obj.osb
+            kml += '</name>'
+        kml += '<Style><IconStyle><color>ff00eadf</color></IconStyle></Style>'
+        kml += '{}</Placemark>'.format(obj.geom_kml)
+
     kml += '</Folder>'
 
     kml += '<Folder>'
     kml += '<name>ОСКМ</name>'
     oskm_layer = QgisOSKM.objects.annotate(geom_kml=AsKML('geom'))
     for obj in oskm_layer:
-        kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+        kml += '<Placemark>'
+        if isinstance(obj.oskm, str):
+            kml += '<name>'
+            kml += obj.oskm
+            kml += '</name>'
+        kml += '<Style><IconStyle><color>ff00ff00</color></IconStyle></Style>'
+        kml += '{}</Placemark>'.format(obj.geom_kml)
     kml += '</Folder>'
 
     kml += '<Folder>'
     kml += '<name>Муфты</name>'
     coupler_layer = QgisCoupling.objects.annotate(geom_kml=AsKML('geom'))
     for obj in coupler_layer:
-        kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+        kml += '<Placemark>'
+        if isinstance(obj.coupling, str):
+            kml += '<name>'
+            kml += obj.coupling
+            kml += '</name>'
+        kml += '<Style><IconStyle><color>ff0000ff</color></IconStyle></Style>'
+        kml += '{}</Placemark>'.format(obj.geom_kml)
+
     kml += '</Folder>'
 
     kml += '<Folder>'
     kml += '<name>Базовые станции</name>'
     bs_layer = QgisBStation.objects.annotate(geom_kml=AsKML('geom'))
     for obj in bs_layer:
-        kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+        kml += '<Placemark>'
+        kml += '<name>'
+        kml += obj.name
+        kml += '</name>'
+        kml += '{}</Placemark>'.format(obj.geom_kml)
     kml += '</Folder>'
 
     kml += '<Folder>'
