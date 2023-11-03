@@ -210,7 +210,7 @@ def download_kml_view(request):
         for feature in layer:
             kml += f'<Placemark>\n<name>{feature.name}</name>\n'
             kml += f'<description>{feature.description}</description>\n'
-            kml += f'{feature.geom.kml}\n'  # Поле 'geom' должно содержать геометрию.
+            kml += f'{feature.geom.kml}\n'
             kml += '</Placemark>\n'
 
     # Закрытие KML-документф.
@@ -503,7 +503,13 @@ def google_earth_kml(request):
     kml += '<name>Покрытие</name>'
     polygon_layer = QgisPolygon.objects.annotate(geom_kml=AsKML('geom'))
     for obj in polygon_layer:
-        kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+        kml += '<Placemark>'
+        # kml += '<Description><![CDATA['
+        # if obj.p_oskm:
+        #     kml += obj.p_oskm
+        # kml += ']]</Description)>'
+        kml += '<Style><PolyStyle><color>B3' + obj.color[1:] + '</color><outline>1</outline></PolyStyle></Style>'
+        kml += '{}</Placemark>'.format(obj.geom_kml)
     kml += '</Folder>'
 
     kml += '<Folder>'
