@@ -504,10 +504,9 @@ def google_earth_kml(request):
     polygon_layer = QgisPolygon.objects.annotate(geom_kml=AsKML('geom'))
     for obj in polygon_layer:
         kml += '<Placemark>'
-        # kml += '<description><![CDATA['
-        # if obj.p_oskm is not None:
-        #     kml += obj.p_oskm
-        # kml += ']]</description>'
+        kml += '<description><![CDATA['
+        if obj.p_oskm is not None: + obj.p_oskm
+        kml += ']]></description>'
         kml += '<Style><PolyStyle><color>B3' + obj.color[1:] + '</color><outline>1</outline></PolyStyle></Style>'
         kml += '{}</Placemark>'.format(obj.geom_kml)
     kml += '</Folder>'
