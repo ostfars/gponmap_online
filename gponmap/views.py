@@ -41,6 +41,9 @@ class QgisMapView(TemplateView):
 class QgisNewMap(TemplateView):
     template_name = "qgis_new.html"
 
+class MapEditor(TemplateView):
+    template_name = "map_editor.html"
+
 
 class QgisPointAPIView(ListAPIView):
     queryset = QgisPoint.objects.all()
