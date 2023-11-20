@@ -45,6 +45,10 @@ class MapEditor(TemplateView):
     template_name = "map_editor.html"
 
 
+class KMLEditor(TemplateView):
+    template_name = "edit_kml.html"
+
+
 class QgisPointAPIView(ListAPIView):
     queryset = QgisPoint.objects.all()
     serializer_class = QgisPointSerializer

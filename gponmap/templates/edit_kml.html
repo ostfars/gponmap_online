@@ -1,0 +1,51 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактор KML</title>
+    <link rel="stylesheet" href="http://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+    <script src="http://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <script src="{% static 'L.KML.js' %}"></script>
+</head>
+<body>
+    <div id="map" style="width: 100%; height: 70vh;"></div>
+    <div>
+        <label for="fileInput">Choose a KML file:</label>
+        <input type="file" id="fileInput" accept=".kml" />
+        <button onclick="loadKML()">Load KML</button>
+    </div>
+
+    <script type="text/javascript">
+        const map = new L.Map('map', { center: new L.LatLng(58.4, 43.0), zoom: 11 });
+        const osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+
+        map.addLayer(osm);
+
+        function loadKML() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const kmltext = e.target.result;
+                    const parser = new DOMParser();
+                    const kml = parser.parseFromString(kmltext, 'text/xml');
+                    const track = new L.KML(kml);
+
+                    map.addLayer(track);
+
+                    const bounds = track.getBounds();
+                    map.fitBounds(bounds);
+                };
+
+                reader.readAsText(file);
+            } else {
+                alert('Please select a KML file.');
+            }
+        }
+    </script>
+</body>
+</html>

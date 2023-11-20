@@ -1,5 +1,5 @@
 from django.urls import path
-from gponmap.views import GponmapView, QgisMapView, QgisNewMap, MapEditor
+from gponmap.views import GponmapView, QgisMapView, QgisNewMap, MapEditor, KMLEditor
 
 app_name = "gponmap"
 
@@ -8,4 +8,6 @@ urlpatterns = [
     path('qgis_test/', QgisMapView.as_view()),
     path('qgis_new/', QgisNewMap.as_view()),
     path('map_editor/', MapEditor.as_view()),
+    path('kml_editor/', KMLEditor.as_view()),
+
 ]
