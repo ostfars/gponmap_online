@@ -16,13 +16,13 @@
 <body>
     <div id="map" style="width: 100%; height: 90vh;"></div>
     <div>
-        <label for="fileInput">Choose a KML file:</label>
+        <label for="fileInput">Выберите файл KML:</label>
         <input type="file" id="fileInput" accept=".kml" />
-        <button onclick="loadKML()">Load KML</button>
+        <button onclick="loadKML()">Загрузить</button>
     </div>
     <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
     <script type="text/javascript">
-        const map = new L.Map('map', { center: new L.LatLng(58.4, 43.0), zoom: 11 });
+        const map = new L.Map('map').setView([44.95792, 34.11026], 9);
         const osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
 
         map.addLayer(osm);
