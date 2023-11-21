@@ -5,17 +5,22 @@
     <meta charset="UTF-8">
     <title>Редактор KML</title>
     <link rel="stylesheet" href="http://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+    <link
+     rel="stylesheet"
+     href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css"
+    />
+
     <script src="http://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
     <script src="{% static 'L.KML.js' %}"></script>
 </head>
 <body>
-    <div id="map" style="width: 100%; height: 70vh;"></div>
+    <div id="map" style="width: 100%; height: 90vh;"></div>
     <div>
         <label for="fileInput">Choose a KML file:</label>
         <input type="file" id="fileInput" accept=".kml" />
         <button onclick="loadKML()">Load KML</button>
     </div>
-
+    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
     <script type="text/javascript">
         const map = new L.Map('map', { center: new L.LatLng(58.4, 43.0), zoom: 11 });
         const osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
@@ -46,6 +51,13 @@
                 alert('Please select a KML file.');
             }
         }
+
+        map.pm.addControls({
+        position: 'topleft',
+        drawCircleMarker: false,
+        rotateMode: false,
+        });
+        map.pm.setLang("ru");
     </script>
 </body>
 </html>
