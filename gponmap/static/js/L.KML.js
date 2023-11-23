@@ -273,7 +273,34 @@ L.Util.extend(L.KML, {
     }
 
     if (name) {
-      layer.bindPopup('<h2>' + name + '</h2>' + descr, { className: 'kml-popup'});
+        var inputName = document.createElement('input');
+        inputName.type = 'text';
+        inputName.value = name;
+        var inputDescr = document.createElement('textarea');
+        inputDescr.value = descr;
+        var updateButton = document.createElement('button');
+        updateButton.innerText = 'Update Popup';
+
+        // Добавляем обработчик события для кнопки обновления
+        updateButton.addEventListener('click', function () {
+            // Обновляем содержимое попапа с новыми данными
+            var newName = inputName.value;
+            var newDescr = inputDescr.value;
+            layer.bindPopup('<h2>' + newName + '</h2>' + newDescr, { className: 'kml-popup' });
+        });
+
+        // Создаем контейнер для элементов управления
+        var popupContent = document.createElement('div');
+        popupContent.appendChild(document.createTextNode('Name: '));
+        popupContent.appendChild(inputName);
+        popupContent.appendChild(document.createElement('br'));
+        popupContent.appendChild(document.createTextNode('Description: '));
+        popupContent.appendChild(inputDescr);
+        popupContent.appendChild(document.createElement('br'));
+        popupContent.appendChild(updateButton);
+
+        // Привязываем попап с использованием созданных элементов управления
+        layer.bindPopup(popupContent, { className: 'kml-popup' });
     }
   },
 
