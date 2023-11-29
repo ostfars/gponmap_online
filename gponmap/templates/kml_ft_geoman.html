@@ -69,6 +69,8 @@
                 var kmlGeoJSON = kmlLayer.toGeoJSON();
                 geojsonLayer.addData(kmlGeoJSON);
 
+                map.removeLayer(kmlLayer);
+
                 // Revoke the URL after loading
                 URL.revokeObjectURL(url);
                 });
