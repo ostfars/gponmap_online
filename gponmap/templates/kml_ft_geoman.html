@@ -1,0 +1,85 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>kml ft geoman test</title>
+
+    <link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/L.Control.Window.css' %}" />
+    <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
+
+</head>
+<body>
+    <div id="map" style="height: 80vh;"></div>
+    <div>
+        <label for="fileInput">Выберите файл KML:</label>
+        <input type="file" id="fileInput" accept=".kml" />
+        <button id="loadKMLButton">Load KML</button>
+        <button id="showGeoJSON">Show GeoJSON</button>
+    </div>
+
+    <script src="{% static 'js/leaflet.js' %}"></script>
+    <script src="{% static 'js/L.KML.js' %}"></script>
+    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+    <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+    <script>
+        var map = new L.Map('map').setView([44.95792, 34.11026], 9);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Enable Geoman
+        map.pm.addControls({
+            position: 'topleft',
+            pmIgnore: false, // Важно, чтобы Geoman использовал geojsonLayer
+        });
+
+        var geojsonLayer = L.geoJSON().addTo(map);
+
+        map.on('pm:create', function (e) {
+            // Вызывается после каждой созданной фигуры Geoman
+            geojsonLayer.addLayer(e.layer);
+        });
+
+
+        // Функция для вывода GeoJSON в консоль
+        function logGeoJSON() {
+            var geoJSONData = geojsonLayer.toGeoJSON();
+            console.log(JSON.stringify(geoJSONData));
+        }
+
+        // Добавьте обработчик событий для кнопки
+        document.getElementById('showGeoJSON').addEventListener('click', logGeoJSON);
+
+        // Обработка выбора файла
+        document.getElementById('fileInput').addEventListener('change', function (e) {
+            var file = e.target.files[0];
+            if (file) {
+
+                // Создаем URL из File объекта
+                var url = URL.createObjectURL(file);
+
+                // Загрузка KML с помощью leaflet-omnivore
+                var kmlLayer = omnivore.kml(url).addTo(map);
+
+                kmlLayer.on('ready', function () {
+                // Extract GeoJSON features from the KML layer and add them to geojsonLayer
+                var kmlGeoJSON = kmlLayer.toGeoJSON();
+                geojsonLayer.addData(kmlGeoJSON);
+
+                // Revoke the URL after loading
+                URL.revokeObjectURL(url);
+                });
+
+            }
+        });
+        // Добавление обработчика событий для кнопки загрузки KML
+        document.getElementById('loadKMLButton').addEventListener('click', function () {
+        document.getElementById('fileInput').click();
+});
+
+    </script>
+</body>
+</html>

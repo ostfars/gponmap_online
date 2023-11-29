@@ -46,7 +46,15 @@ class MapEditor(TemplateView):
 
 
 class KMLEditor(TemplateView):
-    template_name = "edit_kml.html"
+    template_name = "kml_editor.html"
+
+
+class KMLToDB(TemplateView):
+    template_name = "kml_to_db.html"
+
+
+class KMLftGeoman(TemplateView):
+    template_name = "kml_ft_geoman.html"
 
 
 class QgisPointAPIView(ListAPIView):

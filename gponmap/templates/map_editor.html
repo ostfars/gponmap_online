@@ -11,7 +11,7 @@
     />
     <style>
         #map {
-            height: 98vh;
+            height: 80vh;
         }
     </style>
 
@@ -39,9 +39,19 @@
                 rotateMode: false,
             });
             map.pm.setLang("ru");
+
+
+            var layers = L.PM.Utils.findLayers(map);
+            var group = L.featureGroup();
+            layers.forEach((layer)=>{
+                group.addLayer(layer);
+            });
+            var shapes = group.toGeoJSON();
+
         })
     </script>
-
-
+    <div>
+        <button onclick="console.log(shapes)">Console.log</button>
+    </div>
 </body>
 </html>

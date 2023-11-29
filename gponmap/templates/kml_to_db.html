@@ -1,0 +1,50 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Leaflet to PostGIS testing page</title>
+    <link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/L.Control.Window.css' %}" />
+    <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
+
+</head>
+<body>
+    <div id="map" style="height: 80vh;"></div>
+    <button id="showGeoJSON">Show GeoJSON</button>
+
+    <script src="{% static 'js/leaflet.js' %}"></script>
+    <script src="{% static 'js/L.KML.js' %}"></script>
+    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+
+    <script type="text/javascript">
+        var map = new L.Map('map').setView([44.95792, 34.11026], 9);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '© OpenStreetMap contributors'
+        }).addTo(map);
+
+        // Enable Geoman
+        map.pm.addControls({
+            position: 'topleft',
+            pmIgnore: false,
+        });
+
+        var geojsonLayer = L.geoJSON().addTo(map);
+
+        map.on('pm:create', function (e) {
+            // Вызывается после каждой созданной фигуры Geoman
+            geojsonLayer.addLayer(e.layer);
+        });
+
+        // Function to log GeoJSON to console
+        function logGeoJSON() {
+            var geoJSONData = geojsonLayer.toGeoJSON();
+            console.log(JSON.stringify(geoJSONData));
+        }
+
+        // Add event listener to the button
+        document.getElementById('showGeoJSON').addEventListener('click', logGeoJSON);
+    </script>
+</body>
+</html>
