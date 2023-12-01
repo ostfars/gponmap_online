@@ -33,7 +33,7 @@
         // Enable Geoman
         map.pm.addControls({
             position: 'topleft',
-            pmIgnore: false, // Важно, чтобы Geoman использовал geojsonLayer
+            pmIgnore: false,
         });
 
         var geojsonLayer = L.geoJSON().addTo(map);
@@ -41,7 +41,41 @@
         map.on('pm:create', function (e) {
             // Вызывается после каждой созданной фигуры Geoman
             geojsonLayer.addLayer(e.layer);
+            console.log('feature added')
         });
+
+        var updatingGeoJSON = false;
+
+        map.on('layerremove', function (event) {
+            if (!updatingGeoJSON) {
+                var layer = event.layer;
+
+                if (map.pm.globalRemovalEnabled()) {
+                    // Обработка удаления объекта, например, можно обновить GeoJSON данные
+                    updatingGeoJSON = true; // Устанавливаем флаг перед обновлением GeoJSON
+                    map.removeLayer(layer)
+<!--                    updateGeoJSON(layer);-->
+                    updatingGeoJSON = false; // Сбрасываем флаг после обновления GeoJSON
+                }
+            }
+        });
+        map.on("pm:globalremovalmodetoggled", (e) => {
+            console.log(e);
+        });
+
+        function updateGeoJSON(layer) {
+            // Получите обновленные данные в виде объекта GeoJSON
+            var updatedData = geojsonLayer.toGeoJSON();
+
+            // Удалите старый слой
+            map.removeLayer(geojsonLayer);
+
+            // Добавьте новый слой с обновленными данными
+            geojsonLayer = L.geoJSON(updatedData).addTo(map);
+
+            console.log('GeoJSON is up to date');
+        }
+
 
 
         // Функция для вывода GeoJSON в консоль
