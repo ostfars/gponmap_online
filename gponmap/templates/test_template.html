@@ -1,0 +1,28 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Testing template</title>
+
+    <link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/L.Control.Window.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/leaflet-geoman.css' %}" />
+
+</head>
+<body>
+    <div id="map" style="height: 80vh;"></div>
+    <div>
+<!--        <label for="fileInput">Выберите файл KML:</label>-->
+<!--        <input type="file" id="fileInput" accept=".kml" />-->
+<!--        <button id="loadKMLButton">Load KML</button>-->
+        <button id="showGeoJSON">Show GeoJSON</button>
+    </div>
+
+    <script src="{% static 'js/leaflet.js' %}"></script>
+    <script src="{% static 'js/L.KML.js' %}"></script>
+    <script src="{% static 'js/leaflet-geoman.min.js' %}"></script>
+    <script src="{% static 'js/delete-geojson-layer.js' %}"></script>
+</body>
+</html>

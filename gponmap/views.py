@@ -26,6 +26,10 @@ from .serializers import QgisPointSerializer, QgisPointsLineInfoSerializer, Qgis
 from .forms import KMLLayerForm, KMLUploadForm
 
 
+class Test(TemplateView):
+    template_name = "test_template.html"
+
+
 class IndexView(TemplateView):
     template_name = "index.html"
 

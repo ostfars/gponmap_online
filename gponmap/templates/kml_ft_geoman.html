@@ -7,7 +7,7 @@
 
     <link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
     <link rel="stylesheet" href="{% static 'css/L.Control.Window.css' %}" />
-    <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
+    <link rel="stylesheet" href="{% static 'css/leaflet-geoman.css' %}" />
 
 </head>
 <body>
@@ -21,7 +21,7 @@
 
     <script src="{% static 'js/leaflet.js' %}"></script>
     <script src="{% static 'js/L.KML.js' %}"></script>
-    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+    <script src="{% static 'js/leaflet-geoman.min.js' %}"></script>
     <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
     <script>
         var map = new L.Map('map').setView([44.95792, 34.11026], 9);
@@ -33,14 +33,16 @@
         // Enable Geoman
         map.pm.addControls({
             position: 'topleft',
-            pmIgnore: false,
         });
 
         var geojsonLayer = L.geoJSON().addTo(map);
+        var newGeojsonLayer = L.geoJSON().addTo(map);
 
         map.on('pm:create', function (e) {
             // Вызывается после каждой созданной фигуры Geoman
-            geojsonLayer.addLayer(e.layer);
+                updateGeoJSON();
+<!--            geojsonLayer.addLayer(e.layer);-->
+<!--            pmIgnore: false;-->
             console.log('feature added')
         });
 
@@ -54,9 +56,11 @@
                     // Обработка удаления объекта, например, можно обновить GeoJSON данные
                     updatingGeoJSON = true; // Устанавливаем флаг перед обновлением GeoJSON
                     map.removeLayer(layer)
+                    updateGeoJSON()
 <!--                    updateGeoJSON(layer);-->
                     updatingGeoJSON = false; // Сбрасываем флаг после обновления GeoJSON
                 }
+
             }
         });
         map.on("pm:globalremovalmodetoggled", (e) => {
@@ -80,8 +84,16 @@
 
         // Функция для вывода GeoJSON в консоль
         function logGeoJSON() {
-            var geoJSONData = geojsonLayer.toGeoJSON();
+<!--            var geoJSONData = geojsonLayer.toGeoJSON();-->
+            var visibleLayers = L.PM.Utils.findLayers(map);
+            var group = L.featureGroup();
+            visibleLayers.forEach((layer)=>{
+                group.addLayer(layer);
+            });
+            geoJSONData = group.toGeoJSON();
+
             console.log(JSON.stringify(geoJSONData));
+
         }
 
         // Добавьте обработчик событий для кнопки
