@@ -62,8 +62,8 @@
         map.pm.addControls({
         position: 'topleft',
         pmIgnore: false,
-<!--        drawCircleMarker: false,-->
-<!--        rotateMode: false,-->
+        drawCircleMarker: false,
+        rotateMode: false,
         });
         map.pm.setLang("ru");
 
@@ -72,16 +72,16 @@
             // Добавление обработчика события после создания нового слоя
             map.on('pm:create', function (e) {
                 geojsonLayer.addLayer(e.layer);
-<!--                const layer = e.layer;-->
+                const layer = e.layer;
 
 
                 // Добавление попапа
                 geojsonLayer.bindPopup('Click to edit me!');
-<!--                layer.bindPopup('Click to edit me!');-->
+                layer.bindPopup('Click to edit me!');
 
                 // Добавление обработчика события при клике на объект
                 geojsonLayer.on('click', function (e) {
-<!--                layer.on('click', function (e) {-->
+                layer.on('click', function (e) {
                     const newName = prompt('Enter a new name for the object:', layer.options.name);
                     if (newName) {
                         geojsonLayer.options.name = newName;
@@ -96,6 +96,7 @@
         function logGeoJSON() {
             var geoJSONData = geojsonLayer.toGeoJSON();
             console.log(JSON.stringify(geoJSONData));
+            console.log(geojsonLayer)
         }
 
         // Add event listener to the button
