@@ -1,0 +1,105 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Редактор KML</title>
+    <link rel="stylesheet" href="http://unpkg.com/leaflet@1.4.0/dist/leaflet.css" />
+    <link rel="stylesheet" href="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.css" />
+    <link rel="stylesheet" href="https://unpkg.com/leaflet-contextmenu/dist/leaflet.contextmenu.min.css" />
+
+    <script src="http://unpkg.com/leaflet@1.4.0/dist/leaflet.js"></script>
+    <script src="{% static 'js/L.KML.js' %}"></script>
+</head>
+<body>
+    <div id="map" style="width: 100%; height: 90vh;"></div>
+    <div>
+        <label for="fileInput">Выберите файл KML:</label>
+        <input type="file" id="fileInput" accept=".kml" />
+        <button onclick="loadKML()">Загрузить</button>
+    </div>
+    <script src="https://unpkg.com/@geoman-io/leaflet-geoman-free@latest/dist/leaflet-geoman.min.js"></script>
+    <script type="text/javascript">
+        const map = new L.Map('map').setView([44.95792, 34.11026], 9);
+        const osm = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+
+        map.addLayer(osm);
+
+        function loadKML() {
+            const fileInput = document.getElementById('fileInput');
+            const file = fileInput.files[0];
+
+            if (file) {
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+                    const kmltext = e.target.result;
+                    const parser = new DOMParser();
+                    const kml = parser.parseFromString(kmltext, 'text/xml');
+                    const track = new L.KML(kml);
+
+                    map.addLayer(track);
+
+                    const bounds = track.getBounds();
+                    map.fitBounds(bounds);
+                };
+
+                reader.readAsText(file);
+            } else {
+                alert('Please select a KML file.');
+            }
+        }
+
+        map.pm.addControls({
+        position: 'topleft',
+        drawCircleMarker: false,
+        rotateMode: false,
+        });
+        map.pm.setLang("ru");
+
+
+        map.on('pm:create', function(e) {
+            // Добавление события при создании нового объекта
+            e.layer.on('contextmenu', function(ev) {
+                // Добавление события при правом клике на объекте
+                const feature = ev.target;
+
+                // Создание контекстного меню
+                const contextMenu = L.popup()
+                    .setLatLng(ev.latlng)
+                    .setContent(`
+                        <form id="editForm">
+                            <label>Выберите цвет:</label>
+                            <input type="color" id="colorInput" value="${feature.options.color || '#3388ff'}">
+                            <br>
+                            ${feature instanceof L.Marker ? '' : `
+                                <label>Выберите цвет линии:</label>
+                                <input type="color" id="lineColorInput" value="${feature.options.color || '#3388ff'}">
+                                <br>
+                                <label>Выберите ширину линии:</label>
+                                <input type="number" id="lineWidthInput" value="${feature.options.weight || 2}" min="1">
+                                <br>
+                            `}
+                            <button type="button" onclick="updateFeature()">Применить изменения</button>
+                        </form>
+                    `)
+                    .openOn(map);
+
+                // Определение функции обновления свойств объекта
+                window.updateFeature = function() {
+                    const color = document.getElementById('colorInput').value;
+                    feature.setStyle({ color: color });
+
+                    if (!(feature instanceof L.Marker)) {
+                        const lineColor = document.getElementById('lineColorInput').value;
+                        const lineWidth = document.getElementById('lineWidthInput').value;
+                        feature.setStyle({ color: lineColor, weight: lineWidth });
+                    }
+
+                    contextMenu.remove();
+                };
+            });
+        });
+    </script>
+</body>
+</html>

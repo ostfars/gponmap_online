@@ -30,6 +30,10 @@ class Test(TemplateView):
     template_name = "test_template.html"
 
 
+class EditKML(TemplateView):
+    template_name = "edit_kml.html"
+
+
 class IndexView(TemplateView):
     template_name = "index.html"
 

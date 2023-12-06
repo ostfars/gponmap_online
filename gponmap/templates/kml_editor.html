@@ -81,12 +81,13 @@
 
                 // Добавление обработчика события при клике на объект
                 geojsonLayer.on('click', function (e) {
-                layer.on('click', function (e) {
-                    const newName = prompt('Enter a new name for the object:', layer.options.name);
-                    if (newName) {
-                        geojsonLayer.options.name = newName;
-                        geojsonLayer.getPopup().setContent('Name: ' + newName + '<br>Click to edit me!');
-                    }
+                    layer.on('click', function (e) {
+                        const newName = prompt('Enter a new name for the object:', layer.options.name);
+                        if (newName) {
+                            geojsonLayer.options.name = newName;
+                            geojsonLayer.getPopup().setContent('Name: ' + newName + '<br>Click to edit me!');
+                        }
+                    });
                 });
             });
         }

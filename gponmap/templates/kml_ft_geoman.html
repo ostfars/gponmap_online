@@ -41,7 +41,7 @@
         map.on('pm:create', function (e) {
             // Вызывается после каждой созданной фигуры Geoman
                 updateGeoJSON();
-                var layers = L.PM.Utils.findLayers(map)
+<!--                var layers = L.PM.Utils.findLayers(map)-->
                 console.log(layers)
 
             geojsonLayer.addLayer(e.layer);
@@ -49,29 +49,29 @@
             console.log('feature added')
         });
 
-<!--        var updatingGeoJSON = false;-->
+        var updatingGeoJSON = false;
 
-<!--        map.on('layerremove', function (event) {-->
-<!--            if (!updatingGeoJSON) {-->
-<!--                var layer = event.layer;-->
+        map.on('layerremove', function (event) {
+            if (!updatingGeoJSON) {
+                var layer = event.layer;
 
-<!--                if (map.pm.globalRemovalEnabled()) {-->
-<!--                    // Обработка удаления объекта, например, можно обновить GeoJSON данные-->
-<!--                    updatingGeoJSON = true; // Устанавливаем флаг перед обновлением GeoJSON-->
-<!--                    map.removeLayer(layer)-->
+                if (map.pm.globalRemovalEnabled()) {
+                    // Обработка удаления объекта, например, можно обновить GeoJSON данные
+                    updatingGeoJSON = true; // Устанавливаем флаг перед обновлением GeoJSON
+                    map.removeLayer(layer)
 <!--                    updateGeoJSON()-->
-<!--&lt;!&ndash;                    updateGeoJSON(layer);&ndash;&gt;-->
-<!--                    updatingGeoJSON = false; // Сбрасываем флаг после обновления GeoJSON-->
-<!--                }-->
+                    updateGeoJSON(layer);
+                    updatingGeoJSON = false; // Сбрасываем флаг после обновления GeoJSON
+                }
 
-<!--            }-->
-<!--                var layers = L.PM.Utils.findLayers(map)-->
-<!--                console.log(layers)-->
+            }
+                var layers = L.PM.Utils.findLayers(map)
+                console.log(layers)
 
-<!--        });-->
-<!--        map.on("pm:globalremovalmodetoggled", (e) => {-->
-<!--            console.log(e);-->
-<!--        });-->
+        });
+        map.on("pm:globalremovalmodetoggled", (e) => {
+            console.log(e);
+        });
 
         function updateGeoJSON(layer) {
             // Получите обновленные данные в виде объекта GeoJSON

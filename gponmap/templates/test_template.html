@@ -9,21 +9,58 @@
     <link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
     <link rel="stylesheet" href="{% static 'css/L.Control.Window.css' %}" />
     <link rel="stylesheet" href="{% static 'css/leaflet-geoman.css' %}" />
-
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
 </head>
 <body>
     <div id="map" style="height: 80vh;"></div>
     <div>
 <!--        <label for="fileInput">Выберите файл KML:</label>-->
-<!--        <input type="file" id="fileInput" accept=".kml" />-->
-        <button id="loadKMLButton">Load KML</button>
-        <button id="showGeoJSON">Show GeoJSON</button>
+        <input type="file" id="fileInput" accept=".kml" />
+<!--        <button id="loadKMLButton">Загрузить KML</button>-->
+        <button id="showGeoJSON">Показать GeoJSON</button>
+    </div>
+    <div class="modal" id="propertyModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title">Редактировать свойства</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <!-- Add your form fields for editing properties here -->
+            <form id="propertyForm">
+              <label for="color">Цвет:</label>
+              <input type="color" id="color" name="color" value="#ff0000"><br>
+
+              <label for="markerType">Оборудование:</label>
+              <select id="markerType" name="markerType">
+                <option value="circle">ОСБ</option>
+                <option value="circle">ОСКМ</option>
+                <option value="circle">Муфта</option>
+                <option value="square">Базовая станция</option>
+              </select>
+            </form>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-primary" onclick="updateProperties()">Сохранить изменения</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Закрыть</button>
+          </div>
+        </div>
+      </div>
     </div>
 
     <script src="{% static 'js/leaflet.js' %}"></script>
     <script src="{% static 'js/L.KML.js' %}"></script>
     <script src="{% static 'js/leaflet-geoman.min.js' %}"></script>
 <!--    <script src="{% static 'js/delete-geojson-layer.js' %}"></script>-->
-    <script src="{% static 'js/feature_tuning.js' %}"></script>
+<!--    <script src="{% static 'js/feature_tuning.js' %}"></script>-->
+    <script src="{% static 'js/edit-properties.js' %}"></script>
+    <script src='//api.tiles.mapbox.com/mapbox.js/plugins/leaflet-omnivore/v0.3.1/leaflet-omnivore.min.js'></script>
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.10.2/dist/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
 </body>
 </html>
