@@ -2,14 +2,18 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
-    <title>Gpon Map</title>
+    <title>Карта ВОЛС</title>
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <link rel="stylesheet" type="text/css" href="{% static 'map.css' %}" />
-    <link rel="stylesheet" type="text/css" href="https://unpkg.com/leaflet/dist/leaflet.css" crossorigin=""/>
-    <script src="https://unpkg.com/leaflet/dist/leaflet.js" crossorigin=""></script>
+    <link rel="stylesheet" href="{% static 'css/leaflet.css' %}" />
+    <link rel="stylesheet" href="{% static 'css/leaflet-geoman.css' %}" />
+
   </head>
   <body>
-    <div id="map"></div>
-    <script src="{% static 'map.js' %}" defer></script>
+    <div id="map" style="height: 80vh;"></div>
+
+    <script src="{% static 'js/leaflet.js' %}"></script>
+    <script src="{% static 'js/showmap.js' %}"></script>
+    <script src="{% static 'js/leaflet-geoman.min.js' %}"></script>
+
   </body>
 </html>
