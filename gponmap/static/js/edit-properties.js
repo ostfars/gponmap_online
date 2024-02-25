@@ -2,7 +2,7 @@ var map = L.map('map').setView([44.95792, 34.11026], 9);
 
 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
     attribution: 'Map data &copy; OpenStreetMap contributors',
-    maxZoom: 20,
+    maxZoom: 19,
 }).addTo(map);
 
 var geojsonLayer = L.geoJSON().addTo(map);
@@ -18,6 +18,11 @@ map.pm.setLang("ru");
 map.on('pm:create', function (e) {
   // e.layer is the new layer that was created
   var layer = e.layer;
+
+  var lineLength = turf.length(layer.toGeoJSON(), {units: 'kilometers'});
+
+  // Добавляем подпись к линии
+  layer.bindTooltip('Длина: ' + lineLength.toFixed(2) + ' км').openTooltip();
 
 
 

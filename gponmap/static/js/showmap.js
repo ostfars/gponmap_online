@@ -5,7 +5,7 @@
 //}).addTo(map);
 
 var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
-    maxZoom: 20,
+    maxZoom: 19,
     attribution: '© OpenStreetMap'
 });
 
@@ -30,6 +30,8 @@ var yandex = L.tileLayer(
     updateWhenIdle: false
  });
 
+var twogis = L.tileLayer('http://tile2.maps.2gis.com/tiles?x={x}&y={y}&z={z}&v=1.1&zmax=18&zmin=0');
+
 var map = L.map('map', {
     center: [39.73, -104.99],
     zoom: 10,
@@ -40,8 +42,10 @@ var baseMaps = {
     "OpenStreetMap": osm,
     "OpenTopoMap": otm,
     "ArcGIS": esri,
-    "Yandex": yandex
+    "Yandex": yandex,
+    "2Гис": twogis,
 };
 
 
 var layerControl = L.control.layers(baseMaps).addTo(map);
+

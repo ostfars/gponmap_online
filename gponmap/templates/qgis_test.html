@@ -43,9 +43,10 @@
 
             // Создание слоев для точек и линий
             var pointLayer = L.layerGroup({ overlay: false });
-            var lineLayerGroup = L.layerGroup().addTo(map);
-            var realLineLayerGroup = L.layerGroup({ overlay: false });
-            var polygonLayer = L.layerGroup().addTo(map);
+            var lineLayerGroup = L.layerGroup({ overlay: false });
+            var realLineLayerGroup = L.layerGroup().addTo(map);
+            var projectLineLayerGroup = L.layerGroup().addTo(map);
+            var polygonLayer = L.layerGroup({ overlay: false });
             var couplingLayer = L.layerGroup({ overlay: false });
             var bstationLayer = L.layerGroup({ overlay: false });
             var osbLayer = L.layerGroup({ overlay: false });
@@ -162,6 +163,40 @@
                         layer.options.className = 'line-layer'
                     });
                     lineLayer.addTo(lineLayerGroup)
+                },
+                error: function(xhr, status, error) {
+                    console.error(error);
+                },
+            });
+
+            // AJAX-запрос для получения проектных линий
+            $.ajax({
+                url: baseUrl + '/qgis_colorline',
+                type: 'GET',
+                dataType: 'json',
+                success: function(data) {
+                    var filteredData = data.features.filter(function(feature) {
+                        return feature.properties.status == 0;
+                    });
+                    var projectLineLayer = L.geoJSON(filteredData, {
+                        style: function(feature) {
+                            var capacity = feature.properties.capacity;
+                            var lineColor = feature.properties.color;
+
+                            return {
+                                color: lineColor,
+                                dashArray: getStyleByCapacity(capacity),
+                                weight: getWeightByCapacity(capacity),
+                            };
+                        },
+                        onEachFeature: function(feature, layer) {
+                            layer.bindPopup(getPopupContent(feature.properties));
+                        },
+                    });
+                    projectLineLayer.eachLayer(function(layer) {
+                        layer.options.className = 'line-layer'
+                    });
+                    projectLineLayer.addTo(projectLineLayerGroup)
                 },
                 error: function(xhr, status, error) {
                     console.error(error);
@@ -512,7 +547,8 @@
                 "Муфты": couplingLayer,
                 "Базовые станции": bstationLayer,
                 "Покрытие": polygonLayer,
-                "Линии проектные": lineLayerGroup,
+                "Линии все": lineLayerGroup,
+                "Линии проектные": projectLineLayerGroup,
                 "Линии фактические": realLineLayerGroup,
             };
             L.control.layers(null, overlayMaps).addTo(map);
