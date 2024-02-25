@@ -209,7 +209,11 @@
                 type: 'GET',
                 dataType: 'json',
                 success: function(data) {
-                    var realLineLayer = L.geoJSON(data, {
+                    var filteredData = data.features.filter(function(feature) {
+                        return feature.properties.capacity != 'ВУ-12 (SAK-SEV)  B-147';
+                    });
+
+                    var realLineLayer = L.geoJSON(filteredData, {
                         style: function(feature) {
                             var capacity = feature.properties.capacity;
                             var realLineColor = feature.properties.color;
