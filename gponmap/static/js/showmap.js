@@ -10,7 +10,7 @@ var osm = L.tileLayer('https://tile.openstreetmap.org/{z}/{x}/{y}.png', {
 });
 
 var otm = L.tileLayer('https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png', {
-    maxZoom: 19,
+    maxZoom: 22,
     attribution: 'Map data: © OpenStreetMap contributors, SRTM | Map style: © OpenTopoMap (CC-BY-SA)'
 });
 
@@ -18,18 +18,17 @@ var esri = L.tileLayer('https://server.arcgisonline.com/ArcGIS/rest/services/Wor
     attribution: '© Esri'
 });
 
-var stamen = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
-    attribution: 'Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
-});
+//var stamen = L.tileLayer('https://stamen-tiles-{s}.a.ssl.fastly.net/terrain/{z}/{x}/{y}.png', {
+//    attribution: 'Map tiles by Stamen Design, under CC BY 3.0. Data by OpenStreetMap, under ODbL.'
+//});
 
 var yandex = L.tileLayer(
-  'http://vec{s}.maps.yandex.net/tiles?l=map&v=4.55.2&z={z}&x={x}&y={y}&scale=2&lang=ru_RU', {
+  'https://core-sat.maps.yandex.net/tiles?l=sat&v=3.1025.0&x={x}&y={y}&z={z}&scale=1&lang=ru_RU', {
     subdomains: ['01', '02', '03', '04'],
     attribution: '<a http="yandex.ru" target="_blank">Яндекс</a>',
     reuseTiles: true,
     updateWhenIdle: false
-  }
-);
+ });
 
 var twogis = L.tileLayer('http://tile2.maps.2gis.com/tiles?x={x}&y={y}&z={z}&v=1.1&zmax=18&zmin=0');
 
