@@ -247,7 +247,7 @@ def download_kml_view(request):
 
 def export_kml(request):
     kml = '<?xml version="1.0" encoding="UTF-8"?><kml xmlns="http://www.opengis.net/kml/2.2">'
-
+    kml += '<Document>'
     if 'layer1' in request.GET:
         kml += '<Folder>'
         layer1 = QgisPointsLineInfo.objects.annotate(geom_kml=AsKML('geom'))
@@ -295,7 +295,8 @@ def export_kml(request):
         layer7 = ColorLine.objects.annotate(geom_kml=AsKML('geom'))
         for obj in layer7:
             kml += '<Placemark>'
-            kml += '<name><![CDATA[<b>ВОК' + obj.capacity + '</b>]]></name>'
+            if obj.capacity is not None:
+                kml += '<name><![CDATA[<b>ВОК' + obj.capacity + '</b>]]></name>'
 
             kml += '<description><![CDATA[<b>Статус: </b>'
             if obj.status == 0:
@@ -316,7 +317,7 @@ def export_kml(request):
         for obj in layer8:
             kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
         kml += '</Folder>'
-
+    kml += '</Document>'
     kml += '</kml>'
     response = HttpResponse(kml, content_type='application/vnd.google-earth.kml+xml')
     response['Content-Disposition'] = 'attachment; filename="export.kml"'
@@ -540,7 +541,8 @@ def google_earth_kml(request):
     line_layer = ColorLine.objects.annotate(geom_kml=AsKML('geom'))
     for obj in line_layer:
         kml += '<Placemark>'
-        kml += '<name><![CDATA[<b>ВОК' + obj.capacity + '</b>]]></name>'
+        if obj.capacity is not None:
+            kml += '<name><![CDATA[<b>ВОК' + obj.capacity + '</b>]]></name>'
 
         kml += '<description><![CDATA[<b>Статус: </b>'
         if obj.status == 0:

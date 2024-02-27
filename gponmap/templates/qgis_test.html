@@ -394,6 +394,9 @@
 
             function getBstationContent(properties) {
                 var bstationContent = '<b>БС:</b> ' + properties.name;
+                if (properties.kross !== null) {
+                    bstationContent += '</br><b>Кросс:</b> ' + properties.kross;
+                }
                 return bstationContent;
             }
 
