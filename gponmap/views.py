@@ -280,7 +280,11 @@ def export_kml(request):
         kml += '<Folder>'
         layer5 = QgisBStation.objects.annotate(geom_kml=AsKML('geom'))
         for obj in layer5:
-            kml += '<Placemark>{}</Placemark>'.format(obj.geom_kml)
+            kml += '<Placemark>'
+            kml += '<name><![CDATA[' + obj.name + ']]></name>'
+            if obj.kross is not None:
+                kml += '<description><![CDATA[<b>Кросс: </b>' + obj.kross + ']]></description>'
+            kml += '{}</Placemark>'.format(obj.geom_kml)
         kml += '</Folder>'
 
     if 'layer6' in request.GET:
