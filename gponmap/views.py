@@ -412,7 +412,7 @@ def upload_kml(request):
             try:
                 tree = etree.parse(kml_file)
                 root = tree.getroot()
-                # print(root)
+                print(root)
 
                 # folder = root.find(".//{http://www.opengis.net/kml/2.2}Folder")
                 # print(folder)
@@ -436,7 +436,7 @@ def upload_kml(request):
 
                     # Создаем объект MultiLineString
                     line_string = LineString(line_points)
-                    print(line_string)
+                    # print(line_string)
 
                     try:
                         UploadKMLLine.objects.create(geom=line_string)
@@ -454,7 +454,7 @@ def upload_kml(request):
                     point_obj = Point(float(lon), float(lat), 0)
 
                     try:
-                        AddKMLPoint.objects.create(geom=point_obj)
+                        UploadKMLPoint.objects.create(geom=point_obj)
                     except Exception as e:
                         print(f"Ошибка при создании записи точки: {e}")
 
