@@ -118,12 +118,14 @@
             });
 
             function getPointContent(properties) {
-                var pointContent = '<b>Линии:</b> '
-                if (properties.line_info_array != '[None]') {
-                    pointContent += properties.line_info_array;
-                } else if (properties.line_info_array == '[None]') {
-                    pointContent += 'нет'
-                }
+<!--                var pointContent = '<b>Линии:</b> '-->
+<!--                if (properties.line_info_array != '[None]') {-->
+<!--                    pointContent += properties.line_info_array;-->
+<!--                } else if (properties.line_info_array == '[None]') {-->
+<!--                    pointContent += 'нет'-->
+<!--                }-->
+
+                var pointContent = '<b>Опора</b>'
 
                 if (properties.p_owner && properties.p_owner != null) {
                     pointContent += '<br><b>Собственник: </b>' + properties.p_owner

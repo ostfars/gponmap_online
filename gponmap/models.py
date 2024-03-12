@@ -32,7 +32,7 @@ class QgisPoint(models.Model):
 
 class QgisPointsLineInfo(models.Model):
     geom = models.PointField()
-    line_info_array = models.TextField(blank=True, null=True)
+    # line_info_array = models.TextField(blank=True, null=True)
     p_owner = models.CharField(max_length=80)
     p_type = models.CharField(max_length=80)
     p_mount = models.CharField(max_length=80)
